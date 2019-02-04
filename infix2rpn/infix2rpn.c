@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    char *input = argv[1];
+    // char *input = argv[1];
     struct stack* s = stack_init();
 
     // ... SOME CODE MISSING HERE ...
