@@ -3,14 +3,19 @@
 #include "stack.h"
 
 struct stack {
-    // ... SOME CODE MISSING HERE ...
+    int array[STACK_SIZE];
+    int size;
+    int push_ops;
+    int pop_ops;
+    int max_size;
 };
 
 struct stack *stack_init() {
     struct stack* s = malloc(sizeof(struct stack));
-
-    // ... SOME CODE MISSING HERE ...
-
+    s->size = 0;
+    s->push_ops = 0;
+    s->pop_ops = 0;
+    s->max_size = 0;
     return s;
 }
 
@@ -22,29 +27,42 @@ void stack_cleanup(struct stack* s) {
 }
 
 int stack_push(struct stack *s, int c) {
+    if (s->size >= STACK_SIZE) {
+        return 1;
+    }
 
-    // ... SOME CODE MISSING HERE ...
+    s->array[s->size] = c;
+    s->size++;
+    s->push_ops++;
 
     return 0;
 }
 
 int stack_pop(struct stack *s) {
+    if (s->size == 0){
+        return -1;
+    }
+    s->size--;
+    s->pop_ops++;
 
-    // ... SOME CODE MISSING HERE ...
-
-    return 0;
+    return s->array[s->size];
 }
 
 int stack_peek(struct stack *s) {
+    if (s->size == 0) {
+        return -1;
+    }
 
-    // ... SOME CODE MISSING HERE ...
-
-    return 0;
+    return s->array[s->size -1];
 }
-
+/* Return 1 if stack is empty, 0 if the stack contains any elements and
+ * return -1 if the operation fails. */
 int stack_empty(struct stack *s) {
-
-    // ... SOME CODE MISSING HERE ...
-
-    return 0;
+    if (s->size == 0){
+        return 1;
+    }
+    if (s->size > 0){
+        return 0;
+    }
+    return -1;
 }
