@@ -18,16 +18,23 @@ int main(int argc, char *argv[]) {
     char *input = argv[1];
     struct stack* s = stack_init();
 
-    for(size_t i=0; i < strlen(input); i++) {
+    for(size_t i=0; i < strlen(input); i++)
+    {
         char test = input[i];
-    if (test == ' ') {
-        continue;
+        if (test == ' ') {
+            continue;
+        }
+        if (isdigit(test)){
+            printf("%c ", test);
+        }
+        else {
+            stack_push(s, test);
+        }
     }
-        printf("%c", test);
+    while (!stack_empty(s)){
+        printf("%c ", stack_pop(s));
     }
     printf("\n");
-
-
     stack_cleanup(s);
 
     return 0;
