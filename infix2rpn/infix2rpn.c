@@ -18,7 +18,15 @@ int main(int argc, char *argv[]) {
     char *input = argv[1];
     struct stack* s = stack_init();
 
-    // ... SOME CODE MISSING HERE ...
+    for(size_t i=0; i < strlen(input); i++) {
+        char test = input[i];
+    if (test == ' ') {
+        continue;
+    }
+        printf("%c", test);
+    }
+    printf("\n");
+
 
     stack_cleanup(s);
 

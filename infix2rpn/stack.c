@@ -1,5 +1,5 @@
 #include <stdlib.h>
-
+#include <stdio.h>
 #include "stack.h"
 
 struct stack {
@@ -21,8 +21,8 @@ struct stack *stack_init() {
 
 void stack_cleanup(struct stack* s) {
 
-    // ... SOME CODE MISSING HERE ...
-
+    // fprintf(stderr, "stats %d %d %d\n", s->push_ops, s->pop_ops,
+    //           s->max_size);
     free(s);
 }
 
@@ -30,11 +30,9 @@ int stack_push(struct stack *s, int c) {
     if (s->size >= STACK_SIZE) {
         return 1;
     }
-
     s->array[s->size] = c;
     s->size++;
     s->push_ops++;
-
     return 0;
 }
 
@@ -55,8 +53,7 @@ int stack_peek(struct stack *s) {
 
     return s->array[s->size -1];
 }
-/* Return 1 if stack is empty, 0 if the stack contains any elements and
- * return -1 if the operation fails. */
+
 int stack_empty(struct stack *s) {
     if (s->size == 0){
         return 1;
