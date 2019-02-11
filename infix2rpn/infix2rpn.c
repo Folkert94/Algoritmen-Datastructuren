@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
         if (test == ' ') {
             continue;
         }
-        if (isdigit(test)){
+        else if (isdigit(test)){
             printf("%c ", test);
         }
         else {

@@ -21,15 +21,19 @@ struct stack *stack_init() {
 
 void stack_cleanup(struct stack* s) {
 
-    // fprintf(stderr, "stats %d %d %d\n", s->push_ops, s->pop_ops,
-    //           s->max_size);
+    fprintf(stderr, "stats %d %d %d\n", s->push_ops, s->pop_ops,
+              s->max_size);
     free(s);
 }
 
 int stack_push(struct stack *s, int c) {
+    if (s == NULL) {
+        return 1;
+    }
     if (s->size >= STACK_SIZE) {
         return 1;
     }
+
     s->array[s->size] = c;
     s->size++;
     s->push_ops++;
@@ -37,9 +41,13 @@ int stack_push(struct stack *s, int c) {
 }
 
 int stack_pop(struct stack *s) {
+    if (s == NULL) {
+        return -1;
+    }
     if (s->size == 0){
         return -1;
     }
+
     s->size--;
     s->pop_ops++;
 
@@ -47,6 +55,9 @@ int stack_pop(struct stack *s) {
 }
 
 int stack_peek(struct stack *s) {
+    if (s == NULL) {
+        return -1;
+    }
     if (s->size == 0) {
         return -1;
     }
@@ -55,6 +66,9 @@ int stack_peek(struct stack *s) {
 }
 
 int stack_empty(struct stack *s) {
+    if (s == NULL) {
+        return -1;
+    }
     if (s->size == 0){
         return 1;
     }
