@@ -13,8 +13,7 @@ bool is_operator(char c);
 bool is_precedent(char a, int b);
 
 bool is_operator(char c) {
-    if ((c == '+') || (c == '-') || (c == '/') || (c =='*') || (c == '^')
-|| (c == '(') || (c == ')')) {
+    if ((c == '+') || (c == '-') || (c == '/') || (c =='*') || (c == '^')) {
         return true;
     }
     else {
@@ -41,8 +40,7 @@ int main(int argc, char *argv[]) {
     char *input = argv[1];
     struct stack* s = stack_init();
 
-    size_t i = 0;
-    while (i < strlen(input))
+    for (size_t i=0; i < strlen(input); i++)
     {
         char token = input[i];
         if (token == ' ') {
@@ -65,7 +63,6 @@ int main(int argc, char *argv[]) {
             }
             stack_push(s, token);
         }
-        i++;
     }
     // at the end empty the stack whatever's left
     while (!stack_empty(s)){
