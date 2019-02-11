@@ -37,6 +37,10 @@ int stack_push(struct stack *s, int c) {
     s->array[s->size] = c;
     s->size++;
     s->push_ops++;
+
+    if (s->size > s->max_size) {
+        s->max_size = s->size;
+    }
     return 0;
 }
 

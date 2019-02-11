@@ -9,6 +9,29 @@
 
 // ... SOME CODE MISSING HERE ...
 
+bool is_operator(char c);
+bool is_precedent(char a, int b);
+
+bool is_operator(char c) {
+    if ((c == '+') || (c == '-') || (c == '/') || (c =='*') || (c == '^')
+|| (c == '(') || (c == ')')) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+bool is_precedent(char a, int b) {
+    if ((a == '-' || a == '+') && b == '(' ) {
+        return true;
+    }
+    if ((a == '/' || a == '*') && (b == '-' || b == '+')) {
+        return true;
+    }
+        return false;
+}
+
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         printf("usage: %s \"infix_expr\"\n", argv[0]);
@@ -18,24 +41,37 @@ int main(int argc, char *argv[]) {
     char *input = argv[1];
     struct stack* s = stack_init();
 
-    for(size_t i=0; i < strlen(input); i++)
+    size_t i = 0;
+    while (i < strlen(input))
     {
-        char test = input[i];
-        if (test == ' ') {
+        char token = input[i];
+        if (token == ' ') {
             continue;
         }
-        else if (isdigit(test)){
-            printf("%c ", test);
+        if (!isdigit(token) && !is_operator(token)) {
+            stack_cleanup(s);
+            return 1;
         }
-        else {
-            stack_push(s, test);
+        if (isdigit(token)){
+            printf("%c", token);
+            while (isdigit(input[i + 1])) {
+                printf("%c", input[++i]);
+            }
+        printf(" ");
         }
+        if (is_operator(token)) {
+            while (!is_precedent(token, stack_peek(s)) && !stack_empty(s)) {
+                printf("%c ", stack_pop(s));
+            }
+            stack_push(s, token);
+        }
+        i++;
     }
+    // at the end empty the stack whatever's left
     while (!stack_empty(s)){
         printf("%c ", stack_pop(s));
     }
     printf("\n");
     stack_cleanup(s);
-
     return 0;
 }
