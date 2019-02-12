@@ -11,6 +11,8 @@
 
 bool is_operator(char c);
 bool is_precedent(char a, int b);
+bool is_parenthesis(char c);
+void infix2rpn(struct stack *s, char *input);
 
 bool is_operator(char c) {
     if ((c == '+') || (c == '-') || (c == '/') || (c =='*') || (c == '^')) {
@@ -31,24 +33,23 @@ bool is_precedent(char a, int b) {
         return false;
 }
 
-int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        printf("usage: %s \"infix_expr\"\n", argv[0]);
-        return 1;
+bool is_parenthesis(char c) {
+    if ((c == '(') || (c == ')')) {
+        return true;
     }
+    return false;
+}
 
-    char *input = argv[1];
-    struct stack* s = stack_init();
 
+void infix2rpn(struct stack *s, char *input) {
     for (size_t i=0; i < strlen(input); i++)
     {
         char token = input[i];
         if (token == ' ') {
             continue;
         }
-        if (!isdigit(token) && !is_operator(token)) {
-            stack_cleanup(s);
-            return 1;
+        if (!isdigit(token) && !is_operator(token) && !is_parenthesis(token)) {
+            exit(1);
         }
         if (isdigit(token)){
             printf("%c", token);
@@ -57,18 +58,41 @@ int main(int argc, char *argv[]) {
             }
         printf(" ");
         }
+
         if (is_operator(token)) {
             while (!is_precedent(token, stack_peek(s)) && !stack_empty(s)) {
                 printf("%c ", stack_pop(s));
             }
             stack_push(s, token);
         }
+
+        if (token == '(') {
+            stack_push(s, token);
+        }
+        if (token == ')') {
+            while (stack_peek(s) != '(') {
+                printf("%c ", stack_pop(s));
+            }
+        stack_pop(s);
+        }
+
     }
-    // at the end empty the stack whatever's left
     while (!stack_empty(s)){
         printf("%c ", stack_pop(s));
     }
     printf("\n");
+
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        printf("usage: %s \"infix_expr\"\n", argv[0]);
+        return 1;
+    }
+
+    char *input = argv[1];
+    struct stack* s = stack_init();
+    infix2rpn(s, input);
     stack_cleanup(s);
     return 0;
 }
