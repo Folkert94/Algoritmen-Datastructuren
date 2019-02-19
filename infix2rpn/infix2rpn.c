@@ -1,3 +1,10 @@
+/*
+* Folkert Stijnman
+* 10475206
+* Datastructuren en Algoritmen
+* Infix2rpn; writes infix input to Reversh Polish Notation
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -102,7 +109,6 @@ void infix2rpn(struct stack *s, char *input) {
             }
             stack_push(s, token);
         }
-
         if (token == '(') {
             stack_push(s, token);
         }
@@ -126,7 +132,6 @@ int main(int argc, char *argv[]) {
         printf("usage: %s \"infix_expr\"\n", argv[0]);
         return 1;
     }
-
     char *input = argv[1];
     struct stack* s = stack_init();
     invalid_char_check(input);

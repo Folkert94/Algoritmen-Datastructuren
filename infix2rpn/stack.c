@@ -1,3 +1,11 @@
+/*
+* Folkert Stijnman
+* 10475206
+* Datastructuren en Algoritmen
+* Stack.c: Basic struct stack architecture
+*/
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "stack.h"

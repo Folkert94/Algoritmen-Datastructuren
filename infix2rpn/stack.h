@@ -11,7 +11,7 @@ struct stack *stack_init(void);
 
 /* Cleanup stack.
  * Also prints the statistics. */
-void stack_cleanup(struct stack* stack);
+void stack_cleanup(struct stack *stack);
 
 /* Push item onto the stack.
  * Return 0 if succesful, 1 otherwise. */
