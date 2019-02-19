@@ -7,11 +7,11 @@
 
 #include "stack.h"
 
-// ... SOME CODE MISSING HERE ...
-
 bool is_operator(char c);
 bool is_precedent(char a, int b);
 bool is_parenthesis(char c);
+bool invalid_char_check(char * input);
+bool parentheses_check(char *input);
 void infix2rpn(struct stack *s, char *input);
 
 bool is_operator(char c) {
@@ -24,10 +24,13 @@ bool is_operator(char c) {
 }
 
 bool is_precedent(char a, int b) {
-    if ((a == '-' || a == '+') && b == '(' ) {
+    if ((a == '^') && ((b != '^') || (b == '^'))) {
         return true;
     }
     if ((a == '/' || a == '*') && (b == '-' || b == '+')) {
+        return true;
+    }
+    if ((a == '-' || a == '+') && b == '(' ) {
         return true;
     }
         return false;
@@ -40,17 +43,50 @@ bool is_parenthesis(char c) {
     return false;
 }
 
+bool parentheses_check(char *input) {
+    int left_par = 0;
+    int right_par = 0;
+    for (size_t i = 0 ; i < strlen(input); i++) {
+        char token = input[i];
+        if (token == '(') {
+            left_par++;
+        }
+        if (token == ')') {
+            right_par++;
+        }
+    }
+    if (left_par != right_par) {
+        printf("Insufficient parenthesis...\n");
+        exit(1);
+    }
+    return 0;
+}
 
-void infix2rpn(struct stack *s, char *input) {
-    for (size_t i=0; i < strlen(input); i++)
-    {
+bool invalid_char_check(char * input) {
+    for (size_t i = 0 ; i < strlen(input); i++) {
         char token = input[i];
         if (token == ' ') {
             continue;
         }
         if (!isdigit(token) && !is_operator(token) && !is_parenthesis(token)) {
-            exit(1);
+        printf("Invalid character(s) found...\n");
+        exit(1);
         }
+    }
+    return 0;
+}
+
+void infix2rpn(struct stack *s, char *input) {
+    for (size_t i=0; i < strlen(input); i++)
+    {
+        char token = input[i];
+
+        //skip spaces
+        if (token == ' ') {
+            continue;
+        }
+
+        //output digit directly
         if (isdigit(token)){
             printf("%c", token);
             while (isdigit(input[i + 1])) {
@@ -60,7 +96,8 @@ void infix2rpn(struct stack *s, char *input) {
         }
 
         if (is_operator(token)) {
-            while (!is_precedent(token, stack_peek(s)) && !stack_empty(s)) {
+            while (!is_precedent(token, stack_peek(s)) && !stack_empty(s) &&
+        (stack_peek(s) != '(')) {
                 printf("%c ", stack_pop(s));
             }
             stack_push(s, token);
@@ -92,6 +129,8 @@ int main(int argc, char *argv[]) {
 
     char *input = argv[1];
     struct stack* s = stack_init();
+    invalid_char_check(input);
+    parentheses_check(input);
     infix2rpn(s, input);
     stack_cleanup(s);
     return 0;
