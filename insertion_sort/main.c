@@ -50,7 +50,6 @@ int main(int argc, char *argv[]) {
     }
 
     struct list* l = list_init();
-    int num;
     while (fgets(buf, BUF_SIZE, stdin)) {
 
         const char s[2] = " \n";
@@ -58,18 +57,31 @@ int main(int argc, char *argv[]) {
         token = strtok(buf, s);
         while(token != NULL)
         {
-        num = atoi(token);
-        struct node* n = list_new_node(num);
-        list_add_front(l, n);
-        // printf("%s ", token);
 
-        token = strtok(NULL, s);
+            int num = atoi(token);
+            // printf("%d ", num);
+            struct node* n = list_new_node(num);
+            struct node* current = list_head(l);
+            while (1) {
+                if (current == NULL) {
+                    list_add_back(l, n);
+                    break;
+                }
+                if (list_node_value(n) < list_node_value(current)) {
+                    list_insert_before(l, n, current);
+                    break;
+                }
+                current = list_next(current);
+            }
+            token = strtok(NULL, s);
         }
-
     }
 
-
+    struct node* current = list_head(l);
+    while (current != NULL) {
+        printf("%d\n", list_node_value(current));
+        current = list_next(current);
+    }
     list_cleanup(l);
-    printf("\n");
     return 0;
 }
