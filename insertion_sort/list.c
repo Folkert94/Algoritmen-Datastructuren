@@ -166,9 +166,18 @@ int list_node_present(struct list* l, struct node* n) {
     return 1;
 }
 
-// int list_insert_after(struct list* l, struct node* n, struct node* m) {
-//     ;
-// }
+int list_insert_after(struct list* l, struct node* n, struct node* m) {
+    if (l == NULL || n == NULL || m == NULL) {
+        return 1;
+    }
+    if (l->head == m || m->next == NULL) {
+        list_add_back(l, n);
+        return 0;
+    }
+    n->next = m->next;
+    m->next = n;
+    return 0;
+}
 
 int list_insert_before(struct list* l, struct node* n, struct node* m) {
     if (l == NULL || n == NULL || m == NULL) {
@@ -192,14 +201,41 @@ int list_insert_before(struct list* l, struct node* n, struct node* m) {
     return 0;
 }
 
-// int list_length(struct list* l) {
-//     ;
-// }
-//
-// struct node* list_get_ith(struct list* l, int i) {
-//     ;
-// }
-//
-// struct list* list_cut_after(struct list* l, struct node* n) {
-//     ;
-// }
+int list_length(struct list* l) {
+    if (l == NULL) {
+        return 0;
+    }
+    int length = 0;
+    struct node* temp = l->head;
+    while (temp != NULL) {
+        temp = temp->next;
+        length++;
+    }
+    return length;
+}
+
+struct node* list_get_ith(struct list* l, int i) {
+    int j = 0;
+    struct node* temp = l->head;
+    while (j < i) {
+        if (temp == NULL) {
+            return NULL;
+        }
+        temp = temp->next;
+        j++;
+    }
+    return temp;
+}
+
+struct list* list_cut_after(struct list* l, struct node* n) {
+    if (l == NULL || n == NULL) {
+        return NULL;
+    }
+    struct list* l_2 = list_init();
+
+    l_2->head = n->next;
+    n->next = NULL;
+
+    return l_2;
+
+}
