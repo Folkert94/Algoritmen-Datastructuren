@@ -88,4 +88,4 @@ void list_remove_dupl(struct list* l);
 void list_desc_order(struct list* l);
 
 /* Adds N-1 intermediate values */
-// void (list_int_values(struct list *l));
+void (list_int_values(struct list *l));

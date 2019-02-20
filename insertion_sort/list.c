@@ -294,16 +294,15 @@ void list_desc_order(struct list* l) {
     l->head = prev;
 }
 
-// void (list_int_values(struct list *l)) {
-//     struct node *temp = l->head;
-//     struct node *next = temp->next;
-//
-//     while (next != NULL) {
-//         int val = list_node_value(temp) - list_node_value(next);
-//         int num = abs(val /2);
-//         struct node* n = list_new_node(num);
-//         list_insert_after(l, n, temp);
-//         temp = temp->next->next;
-//     }
-//
-// }
+void (list_int_values(struct list *l)) {
+    struct node *temp = l->head;
+
+    while (temp->next != NULL) {
+        int val = list_node_value(temp) - list_node_value(temp->next);
+        int num = list_node_value(temp) - (val / 2);
+        struct node* n = list_new_node(num);
+        list_insert_after(l, n, temp);
+        temp = temp->next->next;
+    }
+
+}

@@ -92,16 +92,16 @@ int main(int argc, char *argv[]) {
     }
     int u = cfg.unique_values;
     int d = cfg.descending_order;
-    // int i = cfg.insert_intermediate;
+    int i = cfg.insert_intermediate;
     if (u == 1) {
         list_remove_dupl(l);
     }
     if (d == 1) {
         list_desc_order(l);
     }
-    // if (i == 1) {
-    //     list_int_values(l);
-    // }
+    if (i == 1) {
+        list_int_values(l);
+    }
     struct node* current = list_head(l);
     while (current != NULL) {
         printf("%d\n", list_node_value(current));
