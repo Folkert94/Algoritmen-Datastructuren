@@ -3,6 +3,7 @@
 #include <string.h>
 #include <getopt.h>
 #include <math.h>
+#include <ctype.h>
 
 #include "list.h"
 #define BUF_SIZE 1024
@@ -67,7 +68,9 @@ int main(int argc, char *argv[]) {
         char *token;
         token = strtok(buf, s);
         while(token != NULL) {
+
             int num = atoi(token);
+
             struct node* n = list_new_node(num);
             struct node* current = list_head(l);
 

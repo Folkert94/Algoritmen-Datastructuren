@@ -57,6 +57,9 @@ struct node* list_next(struct node* n) {
 }
 
 int list_add_front(struct list* l, struct node* n) {
+    if (l == NULL || n == NULL) {
+        return 1;
+    }
     if (l->head == NULL) {
     l->head = n;
     return 0;
@@ -96,14 +99,16 @@ struct node* list_prev(struct list* l, struct node* n) {
 }
 
 int list_add_back(struct list* l, struct node* n) {
+    if (l == NULL || n == NULL) {
+        return 1;
+    }
     if (l->head == NULL) {
         l->head = n;
         return 0;
     }
     struct node *current = l->head;
     while (1) {
-        if (current->next == NULL)
-        {
+        if (current->next == NULL) {
             current->next = n;
             break;
         }
@@ -120,6 +125,9 @@ int list_node_value(struct node* n) {
 }
 
 int list_unlink_node(struct list* l, struct node* n) {
+    if (l == NULL || n == NULL) {
+        return 1;
+    }
     if (l->head == n) {
         l->head = n->next;
         return 0;
@@ -127,13 +135,16 @@ int list_unlink_node(struct list* l, struct node* n) {
 
     struct node* temp = l->head;
     struct node* prev;
+
     while (temp != n) {
+        if (temp == NULL) {
+            return 1;
+        }
         prev = temp;
         temp = temp->next;
     }
     prev->next = n->next;
     return 0;
-
     }
 
 
@@ -142,6 +153,9 @@ void list_free_node(struct node* n) {
 }
 
 int list_cleanup(struct list* l) {
+    if (l == NULL) {
+        return 1;
+    }
     struct node* tmp;
     while (l->head != NULL) {
         tmp = l->head;
@@ -170,7 +184,10 @@ int list_insert_after(struct list* l, struct node* n, struct node* m) {
     if (l == NULL || n == NULL || m == NULL) {
         return 1;
     }
-    if (l->head == m || m->next == NULL) {
+    if (list_node_present(l, n) == 1 || list_node_present(l, m) == 0) {
+        return 1;
+    }
+    if (m->next == NULL) {
         list_add_back(l, n);
         return 0;
     }
@@ -229,6 +246,9 @@ struct node* list_get_ith(struct list* l, int i) {
 
 struct list* list_cut_after(struct list* l, struct node* n) {
     if (l == NULL || n == NULL) {
+        return NULL;
+    }
+    if (list_node_present(l, n) == 0) {
         return NULL;
     }
     struct list* l_2 = list_init();
