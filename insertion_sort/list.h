@@ -80,3 +80,12 @@ struct node* list_get_ith(struct list* l, int i);
  * the second half. Returns a pointer to the second half if succesfully cut
  * and NULL otherwise. */
 struct list* list_cut_after(struct list* l, struct node* n);
+
+/* Removes the duplicates from a list */
+void list_remove_dupl(struct list* l);
+
+/* Turns the list into descending_order */
+void list_desc_order(struct list* l);
+
+/* Adds N-1 intermediate values */
+// void (list_int_values(struct list *l));

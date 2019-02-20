@@ -73,10 +73,9 @@ struct node* list_tail(struct list* l) {
     if (l->head == NULL) {
         return NULL;
     }
-    struct node* tmp;
+    struct node* tmp = l->head;
     struct node* tmp1;
 
-    tmp = l->head;
     while (tmp != NULL) {
         tmp1 = tmp;
         tmp = tmp->next;
@@ -257,5 +256,54 @@ struct list* list_cut_after(struct list* l, struct node* n) {
     n->next = NULL;
 
     return l_2;
-
 }
+
+void list_remove_dupl(struct list* l) {
+    if (l == NULL) {
+        return;
+    }
+    struct node* temp = l->head;
+    struct node* dummy;
+
+    while (temp->next != NULL) {
+        if (list_node_value(temp) == list_node_value(temp->next)) {
+            dummy = temp->next->next;
+            free(temp->next);
+            temp->next = dummy;
+        }
+        else {
+            temp = temp->next;
+        }
+    }
+}
+
+void list_desc_order(struct list* l) {
+    struct node *prev, *temp;
+
+    prev = l->head;
+    temp = l->head->next;
+    l->head = l->head->next;
+    prev->next = NULL;
+
+    while (l->head != NULL) {
+        l->head = l->head->next;
+        temp->next = prev;
+        prev = temp;
+        temp = l->head;
+    }
+    l->head = prev;
+}
+
+// void (list_int_values(struct list *l)) {
+//     struct node *temp = l->head;
+//     struct node *next = temp->next;
+//
+//     while (next != NULL) {
+//         int val = list_node_value(temp) - list_node_value(next);
+//         int num = abs(val /2);
+//         struct node* n = list_new_node(num);
+//         list_insert_after(l, n, temp);
+//         temp = temp->next->next;
+//     }
+//
+// }

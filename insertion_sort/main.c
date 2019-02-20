@@ -49,19 +49,21 @@ int main(int argc, char *argv[]) {
     if (parse_options(&cfg, argc, argv) != 0) {
         return 1;
     }
-
     struct list* l = list_init();
 
     // struct node* n = list_new_node(5);
     // struct node* m = list_new_node(8);
-    // struct node* k = list_new_node(7);
+    // struct node* k = list_new_node(5);
+    // struct node* q = list_new_node(5);
     // struct node* p = list_new_node(10);
+    // struct node* z = list_new_node(5);
     //
     // list_add_back(l, n);
     // list_add_back(l, m);
     // list_add_back(l, k);
+    // list_add_back(l, q);
     // list_insert_after(l, p, k);
-
+    // list_add_back(l, z);
     while (fgets(buf, BUF_SIZE, stdin)) {
 
         const char s[2] = " \n";
@@ -88,6 +90,18 @@ int main(int argc, char *argv[]) {
             token = strtok(NULL, s);
         }
     }
+    int u = cfg.unique_values;
+    int d = cfg.descending_order;
+    // int i = cfg.insert_intermediate;
+    if (u == 1) {
+        list_remove_dupl(l);
+    }
+    if (d == 1) {
+        list_desc_order(l);
+    }
+    // if (i == 1) {
+    //     list_int_values(l);
+    // }
     struct node* current = list_head(l);
     while (current != NULL) {
         printf("%d\n", list_node_value(current));
@@ -95,6 +109,5 @@ int main(int argc, char *argv[]) {
     }
 
     list_cleanup(l);
-
     return 0;
 }
