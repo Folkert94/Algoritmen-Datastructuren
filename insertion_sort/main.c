@@ -1,3 +1,10 @@
+/*
+* Folkert Stijnman
+* 10475206
+* Datastructuren en Algoritmen
+* Insertion Sort; makes use of insertion sort and different flags
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,8 +18,6 @@
 static char buf[BUF_SIZE];
 
 struct config {
-    // You can ignore these options until you implement the
-    // extra command-line arguments.
 
     // Set to 1 if -u is specified, 0 otherwise.
     int unique_values;
@@ -51,19 +56,6 @@ int main(int argc, char *argv[]) {
     }
     struct list* l = list_init();
 
-    // struct node* n = list_new_node(5);
-    // struct node* m = list_new_node(8);
-    // struct node* k = list_new_node(5);
-    // struct node* q = list_new_node(5);
-    // struct node* p = list_new_node(10);
-    // struct node* z = list_new_node(5);
-    //
-    // list_add_back(l, n);
-    // list_add_back(l, m);
-    // list_add_back(l, k);
-    // list_add_back(l, q);
-    // list_insert_after(l, p, k);
-    // list_add_back(l, z);
     while (fgets(buf, BUF_SIZE, stdin)) {
 
         const char s[2] = " \n";
@@ -93,6 +85,7 @@ int main(int argc, char *argv[]) {
     int u = cfg.unique_values;
     int d = cfg.descending_order;
     int i = cfg.insert_intermediate;
+    int z = cfg.zip_alternating;
     if (u == 1) {
         list_remove_dupl(l);
     }
@@ -100,14 +93,21 @@ int main(int argc, char *argv[]) {
         list_desc_order(l);
     }
     if (i == 1) {
-        list_int_values(l);
+        list_inter_values(l);
+    }
+    if (z == 1) {
+        int length = list_length(l);
+        int mid = (length / 2);
+        struct node* half = list_get_ith(l, mid);
+        struct list* l2 = list_cut_after(l, half);
+        split_alternate(l, l2);
+        free(l2);
     }
     struct node* current = list_head(l);
     while (current != NULL) {
         printf("%d\n", list_node_value(current));
         current = list_next(current);
     }
-
     list_cleanup(l);
     return 0;
 }

@@ -88,4 +88,8 @@ void list_remove_dupl(struct list* l);
 void list_desc_order(struct list* l);
 
 /* Adds N-1 intermediate values */
-void (list_int_values(struct list *l));
+void list_inter_values(struct list *l);
+
+/* Split list into two equal halves and zip them into one list by alternating
+the elements from the seperate lists */
+void split_alternate(struct list *l, struct list *l2);
