@@ -63,26 +63,26 @@ struct node* list_tail(struct list* l) {
     if (l->head == NULL) {
         return NULL;
     }
-    struct node* temp = l->head;
-    struct node* temp1;
+    struct node* tmp = l->head;
+    struct node* tmp1;
 
-    while (temp != NULL) {
-        temp1 = temp;
-        temp = temp->next;
+    while (tmp != NULL) {
+        tmp1 = tmp;
+        tmp = tmp->next;
     }
-    return temp1;
+    return tmp1;
 }
 
 struct node* list_prev(struct list* l, struct node* n) {
-    struct node* temp = l->head;
-    if (temp == n) {
+    struct node* current = l->head;
+    if (current == n) {
         return NULL;
     }
     while (1) {
-        if (temp->next == n) {
-            return temp;
+        if (current->next == n) {
+            return current;
         }
-        temp = temp->next;
+        current = current->next;
     }
     return NULL;
 }
@@ -95,13 +95,13 @@ int list_add_back(struct list* l, struct node* n) {
         l->head = n;
         return 0;
     }
-    struct node *temp = l->head;
+    struct node *current = l->head;
     while (1) {
-        if (temp->next == NULL) {
-            temp->next = n;
+        if (current->next == NULL) {
+            current->next = n;
             break;
         }
-        temp = temp->next;
+        current = current->next;
     }
     return 0;
 }
@@ -145,11 +145,11 @@ int list_cleanup(struct list* l) {
     if (l == NULL) {
         return 1;
     }
-    struct node* temp;
+    struct node* tmp;
     while (l->head != NULL) {
-        temp = l->head;
-        l->head = temp->next;
-        free(temp);
+        tmp = l->head;
+        l->head = tmp->next;
+        free(tmp);
     }
     free(l);
     return 0;
@@ -196,9 +196,9 @@ int list_insert_before(struct list* l, struct node* n, struct node* m) {
     struct node* temp = l->head;
     struct node* prev;
     while (temp != m) {
-        if (temp == NULL || temp == n) {
-            return 1;
-        }
+    if (temp == NULL || temp == n) {
+        return 1;
+    }
         prev = temp;
         temp = temp->next;
     }
@@ -240,11 +240,11 @@ struct list* list_cut_after(struct list* l, struct node* n) {
     if (list_node_present(l, n) == 0) {
         return NULL;
     }
-    struct list* list_2 = list_init();
-    list_2->head = n->next;
+    struct list* l_2 = list_init();
+    l_2->head = n->next;
     n->next = NULL;
 
-    return list_2;
+    return l_2;
 }
 
 void list_remove_dupl(struct list* l) {
@@ -271,6 +271,7 @@ void list_desc_order(struct list* l) {
         return;
     }
     struct node *prev, *temp;
+
     prev = l->head;
     temp = l->head->next;
     l->head = l->head->next;
@@ -307,7 +308,6 @@ void split_alternate(struct list *l, struct list *l2) {
     struct node* temp = l2->head;
     struct node* temp2 = l->head;
     struct node* dummy;
-
     while (temp != NULL) {
         dummy = temp;
         temp = temp->next;

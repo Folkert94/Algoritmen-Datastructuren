@@ -1,10 +1,3 @@
-/*
-* Folkert Stijnman
-* 10475206
-* Datastructuren en Algoritmen
-* Linked List structure with corresponding and extra functions
-*/
-
 /* Linked List interface.
  * Specialized for integers. */
 
@@ -91,7 +84,7 @@ struct list* list_cut_after(struct list* l, struct node* n);
 /* Removes the duplicates from a list */
 void list_remove_dupl(struct list* l);
 
-/* Turns the list into descending order */
+/* Turns the list into descending_order */
 void list_desc_order(struct list* l);
 
 /* Adds N-1 intermediate values */
