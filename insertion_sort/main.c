@@ -1,10 +1,3 @@
-/*
-* Folkert Stijnman
-* 10475206
-* Datastructuren en Algoritmen
-* Insertion Sort; makes use of insertion sort and different flags
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,6 +11,8 @@
 static char buf[BUF_SIZE];
 
 struct config {
+    // You can ignore these options until you implement the
+    // extra command-line arguments.
 
     // Set to 1 if -u is specified, 0 otherwise.
     int unique_values;
@@ -82,32 +77,14 @@ int main(int argc, char *argv[]) {
             token = strtok(NULL, s);
         }
     }
-    int u = cfg.unique_values;
-    int d = cfg.descending_order;
-    int i = cfg.insert_intermediate;
-    int z = cfg.zip_alternating;
-    if (u == 1) {
-        list_remove_dupl(l);
-    }
-    if (d == 1) {
-        list_desc_order(l);
-    }
-    if (i == 1) {
-        list_inter_values(l);
-    }
-    if (z == 1) {
-        int length = list_length(l);
-        int mid = (length / 2);
-        struct node* half = list_get_ith(l, mid);
-        struct list* l2 = list_cut_after(l, half);
-        split_alternate(l, l2);
-        free(l2);
-    }
+
     struct node* current = list_head(l);
     while (current != NULL) {
         printf("%d\n", list_node_value(current));
         current = list_next(current);
     }
+
     list_cleanup(l);
+
     return 0;
 }

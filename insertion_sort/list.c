@@ -1,14 +1,24 @@
-/*
-* Folkert Stijnman
-* 10475206
-* Datastructuren en Algoritmen
-* Linked List structure with corresponding functions
-*/
-
 #include <stdlib.h>
 #include <stdio.h>
 
 #include "list.h"
+
+/*
+ * TODO: A lot of code missing here. You will need to add implementations for
+ * all the functions described in list.h here.
+ *
+ * Start by adding the definitions for the list and node structs. You may
+ * implement any of the Linked List versions discussed in the lecture, which
+ * have some different trade-offs for the functions you will need to write.
+ *
+ * Note: The function prototypes in list.h assume the most basic Singly Linked
+ * List. If you build some other version, you may not need all of the function
+ * arguments for all of the described functions. This will produce a warning,
+ * which you can suppress by adding a simple if-statement to check the value
+ * of the unused parameter.
+ *
+ * Also, do not forget to add any required includes at the top of your file.
+ */
 
 struct list {
     struct node *head;
@@ -63,9 +73,10 @@ struct node* list_tail(struct list* l) {
     if (l->head == NULL) {
         return NULL;
     }
-    struct node* tmp = l->head;
+    struct node* tmp;
     struct node* tmp1;
 
+    tmp = l->head;
     while (tmp != NULL) {
         tmp1 = tmp;
         tmp = tmp->next;
@@ -241,77 +252,10 @@ struct list* list_cut_after(struct list* l, struct node* n) {
         return NULL;
     }
     struct list* l_2 = list_init();
+
     l_2->head = n->next;
     n->next = NULL;
 
     return l_2;
-}
 
-void list_remove_dupl(struct list* l) {
-    if (l == NULL) {
-        return;
-    }
-    struct node* temp = l->head;
-    struct node* dummy;
-
-    while (temp->next != NULL) {
-        if (list_node_value(temp) == list_node_value(temp->next)) {
-            dummy = temp->next->next;
-            free(temp->next);
-            temp->next = dummy;
-        }
-        else {
-            temp = temp->next;
-        }
-    }
-}
-
-void list_desc_order(struct list* l) {
-    if (l == NULL) {
-        return;
-    }
-    struct node *prev, *temp;
-
-    prev = l->head;
-    temp = l->head->next;
-    l->head = l->head->next;
-    prev->next = NULL;
-
-    while (l->head != NULL) {
-        l->head = l->head->next;
-        temp->next = prev;
-        prev = temp;
-        temp = l->head;
-    }
-    l->head = prev;
-}
-
-void list_inter_values(struct list *l) {
-    if (l == NULL) {
-        return;
-    }
-    struct node *temp = l->head;
-
-    while (temp->next != NULL) {
-        int val = list_node_value(temp) - list_node_value(temp->next);
-        int num = list_node_value(temp) - (val / 2);
-        struct node* n = list_new_node(num);
-        list_insert_after(l, n, temp);
-        temp = temp->next->next;
-    }
-}
-
-void split_alternate(struct list *l, struct list *l2) {
-    if (l == NULL || l2 == NULL) {
-        return;
-    }
-    struct node* temp = l2->head;
-    struct node* temp2 = l->head;
-    struct node* dummy;
-    while (temp != NULL) {
-        dummy = temp;
-        temp = temp->next;
-        list_insert_after(l, dummy, temp2);
-        temp2 = temp2->next->next;
-    }
 }
