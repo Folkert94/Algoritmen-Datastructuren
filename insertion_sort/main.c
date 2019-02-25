@@ -58,6 +58,7 @@ int main(int argc, char *argv[]) {
 
     while (fgets(buf, BUF_SIZE, stdin)) {
 
+        // Reading and splitting string.
         const char s[2] = " \n";
         char *token;
         token = strtok(buf, s);
@@ -68,6 +69,7 @@ int main(int argc, char *argv[]) {
             struct node* n = list_new_node(num);
             struct node* current = list_head(l);
 
+            // Sorting every token.
             while (1) {
                 if (current == NULL) {
                     list_add_back(l, n);
@@ -82,10 +84,12 @@ int main(int argc, char *argv[]) {
             token = strtok(NULL, s);
         }
     }
+    // Flags and corresponding functions
     int u = cfg.unique_values;
     int d = cfg.descending_order;
     int i = cfg.insert_intermediate;
     int z = cfg.zip_alternating;
+
     if (u == 1) {
         list_remove_dupl(l);
     }
@@ -103,6 +107,8 @@ int main(int argc, char *argv[]) {
         split_alternate(l, l2);
         free(l2);
     }
+
+    // Print full linked list and clean up.
     struct node* current = list_head(l);
     while (current != NULL) {
         printf("%d\n", list_node_value(current));
