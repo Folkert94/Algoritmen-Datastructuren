@@ -21,4 +21,3 @@ unsigned long array_size(struct array *a);
 
 /* Cleanup array data structure. */
 void array_cleanup(struct array* a);
-

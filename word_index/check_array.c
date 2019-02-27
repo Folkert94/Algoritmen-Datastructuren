@@ -21,6 +21,7 @@ START_TEST (test_init)
     a = array_init(2);
     ck_assert_ptr_nonnull(a);
     array_cleanup(a);
+
 }
 END_TEST
 
@@ -29,14 +30,14 @@ START_TEST (test_add_basic)
 {
     struct array* a;
     a = array_init(2);
-    
+
     ck_assert_ptr_nonnull(a);
     ck_assert_uint_eq(array_size(a), 0);
-    
+
     ck_assert_int_eq(array_append(a, 3), 0);
     ck_assert_int_eq(array_append(a, 5), 0);
     ck_assert_uint_eq(array_size(a), 2);
-    
+
     ck_assert_int_eq(array_get(a, 0), 3);
     ck_assert_int_eq(array_get(a, 1), 5);
     array_cleanup(a);
@@ -48,17 +49,17 @@ START_TEST (test_add_resize)
 {
     struct array* a;
     a = array_init(2);
-    
+
     ck_assert_ptr_nonnull(a);
     ck_assert_uint_eq(array_size(a), 0);
-    
+
     ck_assert_int_eq(array_append(a, 3), 0);
     ck_assert_int_eq(array_append(a, 5), 0);
     ck_assert_int_eq(array_append(a, 7), 0);
     ck_assert_int_eq(array_append(a, 2), 0);
     ck_assert_int_eq(array_append(a, 1), 0);
     ck_assert_uint_eq(array_size(a), 5);
-    
+
     ck_assert_int_eq(array_get(a, 0), 3);
     ck_assert_int_eq(array_get(a, 1), 5);
     ck_assert_int_eq(array_get(a, 2), 7);
@@ -80,7 +81,7 @@ Suite * array_suite(void) {
     tcase_add_test(tc_core, test_init);
     tcase_add_test(tc_core, test_add_basic);
     tcase_add_test(tc_core, test_add_resize);
-    
+
     suite_add_tcase(s, tc_core);
     return s;
 }

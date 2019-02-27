@@ -2,18 +2,27 @@
 
 #include "array.h"
 
-// ... SOME CODE MISSING HERE ...
+struct array {
+    int capacity;
+    int size;
+    int *data;
+};
 
 struct array* array_init(unsigned long initial_capacity) {
-    // ... SOME CODE MISSING HERE ...
+    struct array* a = malloc(sizeof(struct array));
+    a->data = malloc(sizeof(int) * initial_capacity);
+    a->size = 0;
+    a->capacity = initial_capacity;
+    return a;
 }
 
 void array_cleanup(struct array* a) {
-    // ... SOME CODE MISSING HERE ...
+    free(a->data);
+    free(a);
 }
 
 int array_get(struct array *a, unsigned long index) {
-    // ... SOME CODE MISSING HERE ...
+    return a->data[index];
 }
 
 /* Note: Although this operation might require the array to be resized and
@@ -21,9 +30,15 @@ int array_get(struct array *a, unsigned long index) {
  * this in such a way that the amortized complexity is still O(1).
  * Make sure your code is implemented in such a way to guarantee this. */
 int array_append(struct array *a, int elem) {
-    // ... SOME CODE MISSING HERE ...
+    if (a->size >= a->capacity) {
+        a->capacity *= 2;
+        a->data = realloc(a->data, sizeof(int) * a->capacity);
+    }
+    a->data[a->size] = elem;
+    a->size++;
+    return 0;
 }
 
 unsigned long array_size(struct array *a) {
-    // ... SOME CODE MISSING HERE ...
+    return a->size;
 }
