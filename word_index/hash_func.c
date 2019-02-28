@@ -4,4 +4,6 @@
 unsigned long hash_too_simple(unsigned char *str) {
     return (unsigned long) *str;
 }
-
+unsigned long hash_folly(unsigned char *str) {
+    
+}

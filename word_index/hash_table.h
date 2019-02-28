@@ -8,6 +8,9 @@ struct table;
 /* Handle to the hash table nodes */
 struct node;
 
+/* Initialise a node with key and value */
+struct node* init(char *key, int value);
+
 /* Initialise a hash table and return a pointer to it, returns NULL on failure.
  * Requires a starting capacity, a load factor after which to resize and a
  * function pointer to the hash function to be used for all hashing
@@ -21,7 +24,7 @@ struct table *table_init(unsigned long capacity, double max_load,
  * instead. Returns 0 if successful and 1 otherwise. */
 int table_insert(struct table *t, char *key, int value);
 
-/* Returns the array of all inserted integer values for the specified key. 
+/* Returns the array of all inserted integer values for the specified key.
  * Returns NULL if the key is not present in the table. */
 struct array *table_lookup(struct table *t, char *key);
 
@@ -32,4 +35,3 @@ int table_delete(struct table *t, char *key);
 
 /* Clean up the hash table data structure. */
 void table_cleanup(struct table *t);
-
