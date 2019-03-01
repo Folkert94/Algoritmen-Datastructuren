@@ -34,10 +34,9 @@ struct node {
 
 struct node* node_init(char *key, int value) {
     struct node* n = malloc(sizeof(struct node));
-    //hash key & key
     n->key = key;
     n->value = array_init(4);
-    array_append(n, value);
+    array_append(n->value, value);
     n->next = NULL;
     return n;
 }
@@ -62,15 +61,45 @@ struct table *table_init(unsigned long capacity, double max_load,
 }
 
 int table_insert(struct table *t, char *key, int value) {
+    int index = t->hash_func(key) % t->capacity;
+
+    // struct node* tmp = table_lookup(t, key);
+
     struct node* n = node_init(key, value);
-    int index = t->hash_func(key);
-    t->array[index] = n;
-    return 0;
+
+    //als de plek nog vrij is
+    if (t->array[index] == NULL) {
+        t->array[index] = n;
+        return 0;
+        }
+    //als de plek niet vrij is, stop m achteraan
+    if (t->array[index] != NULL) {
+        struct node* temp = t->array[index];
+        while (1) {
+            if (temp->next == NULL) {
+                temp->next = n;
+                break;
+            }
+            temp = temp->next;
+        }
+        return 0;
+    }
 }
 
+
 struct array *table_lookup(struct table *t, char *key) {
-    int index = t->hash_func(key);
-    return t->array[index];
+    int index = t->hash_func(key) % t->capacity;
+    struct node* temp = t->array[index];
+    if (temp->next == NULL) {
+        return temp->value;
+    }
+    while (temp != NULL) {
+        if (temp->key == key) {
+            return temp->value;
+        }
+        temp = temp->next;
+    }
+    return NULL;
 }
 
 int table_delete(struct table *t, char *key) {
@@ -78,6 +107,26 @@ int table_delete(struct table *t, char *key) {
 }
 
 void table_cleanup(struct table *t) {
+    int i = 0;
+    while (i < t->capacity) {
+        if (t->array[i] != NULL) {
+
+            // APARTE FUNCTIE?????
+            struct node* tmp = t->array[i]->next;
+            struct node* tmp2;
+
+            while (tmp != NULL) {
+                tmp2 = tmp;
+                tmp = tmp->next;
+                array_cleanup(tmp2->value);
+                free(tmp2);
+            }
+
+            array_cleanup(t->array[i]->value);
+            free(t->array[i]);
+        }
+        i++;
+    }
     free(t->array);
     free(t);
 }

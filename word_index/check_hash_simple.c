@@ -32,18 +32,18 @@ START_TEST (test_add_basic)
     struct table* t;
     t = table_init(2, 0.6, hash_too_simple);
     ck_assert_ptr_nonnull(t);
-    
+
     char *a = malloc(sizeof(char) * 4);
     memcpy(a, "abc", sizeof(char) * 4);
     char *b = malloc(sizeof(char) * 4);
     memcpy(b, "def", sizeof(char) * 4);
-    
+
     ck_assert_int_eq(table_insert(t, a, 3), 0);
     ck_assert_int_eq(table_insert(t, b, 5), 0);
-    
+
     ck_assert_int_eq(array_get(table_lookup(t, a), 0), 3);
     ck_assert_int_eq(array_get(table_lookup(t, b), 0), 5);
-    
+
     table_cleanup(t);
     free(a);
     free(b);
@@ -55,23 +55,23 @@ START_TEST (test_lookup_equals)
     struct table* t;
     t = table_init(2, 0.6, hash_too_simple);
     ck_assert_ptr_nonnull(t);
-    
+
     char *a = malloc(sizeof(char) * 4);
     memcpy(a, "abc", sizeof(char) * 4);
     char *b = malloc(sizeof(char) * 4);
     memcpy(b, "def", sizeof(char) * 4);
-    
+
     char *c = malloc(sizeof(char) * 4);
     memcpy(c, "abc", sizeof(char) * 4);
     char *d = malloc(sizeof(char) * 4);
     memcpy(d, "def", sizeof(char) * 4);
-    
+
     ck_assert_int_eq(table_insert(t, a, 3), 0);
     ck_assert_int_eq(table_insert(t, b, 5), 0);
-    
+
     ck_assert_int_eq(array_get(table_lookup(t, c), 0), 3);
     ck_assert_int_eq(array_get(table_lookup(t, d), 0), 5);
-    
+
     table_cleanup(t);
     free(a);
     free(b);
@@ -86,26 +86,26 @@ START_TEST (test_add_chaining)
     struct table* t;
     t = table_init(8, 0.6, hash_too_simple);
     ck_assert_ptr_nonnull(t);
-    
+
     char *a = malloc(sizeof(char) * 4);
     memcpy(a, "abc", sizeof(char) * 4);
     char *b = malloc(sizeof(char) * 4);
-    memcpy(b, "ade", sizeof(char) * 4); 
+    memcpy(b, "ade", sizeof(char) * 4);
     char *c = malloc(sizeof(char) * 4);
     memcpy(c, "afg", sizeof(char) * 4);
     char *d = malloc(sizeof(char) * 4);
     memcpy(d, "ahi", sizeof(char) * 4);
-    
+
     ck_assert_int_eq(table_insert(t, a, 3), 0);
     ck_assert_int_eq(table_insert(t, b, 5), 0);
     ck_assert_int_eq(table_insert(t, c, 7), 0);
     ck_assert_int_eq(table_insert(t, d, 11), 0);
-    
+
     ck_assert_int_eq(array_get(table_lookup(t, a), 0), 3);
     ck_assert_int_eq(array_get(table_lookup(t, b), 0), 5);
     ck_assert_int_eq(array_get(table_lookup(t, c), 0), 7);
     ck_assert_int_eq(array_get(table_lookup(t, d), 0), 11);
-    
+
     table_cleanup(t);
     free(a);
     free(b);
@@ -127,7 +127,7 @@ Suite * hash_table_suite(void) {
     tcase_add_test(tc_core, test_add_basic);
     tcase_add_test(tc_core, test_lookup_equals);
     tcase_add_test(tc_core, test_add_chaining);
-    
+
     suite_add_tcase(s, tc_core);
     return s;
 }
