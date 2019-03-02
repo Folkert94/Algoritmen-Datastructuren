@@ -48,12 +48,6 @@ struct node* node_init(char *key, int value) {
     return n;
 }
 
-// int table_load(struct table *t) {
-//     int counter = 0;
-//     while ()
-//     return 1;
-// }
-
 struct table *table_init(unsigned long capacity, double max_load,
                             unsigned long (*hash_func)(unsigned char *)) {
     struct table* t = malloc(sizeof(struct table));
@@ -183,10 +177,10 @@ void table_cleanup(struct table *t) {
 
 int compare_string(char* str1, char* str2) {
     if (str1 == NULL || str2 == NULL) {
-        return 1;
+        return NULL;
     }
-    int rc = strcmp(str1, str2);
-    if (rc == 0) {
+    int a = strcmp(str1, str2);
+    if (a == 0) {
         return 0;
     }
     else {
