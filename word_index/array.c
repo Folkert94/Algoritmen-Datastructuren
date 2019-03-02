@@ -3,8 +3,8 @@
 #include "array.h"
 
 struct array {
-    int capacity;
-    int size;
+    unsigned long capacity;
+    unsigned long size;
     int *data;
 };
 
@@ -22,6 +22,9 @@ void array_cleanup(struct array* a) {
 }
 
 int array_get(struct array *a, unsigned long index) {
+    if (a == NULL || a->data[index] == NULL) {
+        return -1;
+    }
     return a->data[index];
 }
 

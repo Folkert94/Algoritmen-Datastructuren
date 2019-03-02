@@ -48,7 +48,7 @@ struct table *table_init(unsigned long capacity, double max_load,
                             unsigned long (*hash_func)(unsigned char *)) {
     struct table* t = malloc(sizeof(struct table));
     t->array = malloc(sizeof(struct node) * capacity);
-    int i = 0;
+    long unsigned int i = 0;
     while (i < capacity) {
         t->array[i] = NULL;
         i++;
@@ -62,52 +62,92 @@ struct table *table_init(unsigned long capacity, double max_load,
 
 int table_insert(struct table *t, char *key, int value) {
     int index = t->hash_func(key) % t->capacity;
-
-    // struct node* tmp = table_lookup(t, key);
+    struct array* temp = table_lookup(t, key);
+    if (temp != NULL) {
+        array_append(temp, value);
+        return 0;
+    }
 
     struct node* n = node_init(key, value);
-
-    //als de plek nog vrij is
     if (t->array[index] == NULL) {
         t->array[index] = n;
         return 0;
         }
-    //als de plek niet vrij is, stop m achteraan
+
     if (t->array[index] != NULL) {
-        struct node* temp = t->array[index];
+        struct node* tmp = t->array[index];
         while (1) {
-            if (temp->next == NULL) {
-                temp->next = n;
+            if (tmp->next == NULL) {
+                tmp->next = n;
                 break;
             }
-            temp = temp->next;
+            tmp = tmp->next;
         }
         return 0;
     }
+
+    return 1;
 }
 
-
 struct array *table_lookup(struct table *t, char *key) {
-    int index = t->hash_func(key) % t->capacity;
-    struct node* temp = t->array[index];
-    if (temp->next == NULL) {
-        return temp->value;
+    if (t == NULL || key == NULL) {
+        return NULL;
     }
-    while (temp != NULL) {
-        if (temp->key == key) {
-            return temp->value;
-        }
+    unsigned long index = t->hash_func(key) % t->capacity;
+    struct node* temp = t->array[index];
+
+    while (temp != NULL && (compare_string(temp->key, key) != 0)) {
         temp = temp->next;
     }
+
+    if (temp == NULL) {
+        return NULL;
+    }
+
+    if (compare_string(temp->key, key) == 0) {
+        return temp->value;
+    }
+
     return NULL;
 }
 
 int table_delete(struct table *t, char *key) {
-    // ... SOME CODE MISSING HERE ...
+    if (t == NULL || key == NULL) {
+        return 1;
+    }
+    struct array* tmp = table_lookup(t, key);
+    if (tmp == NULL) {
+        return 1;
+    }
+
+    unsigned long index = t->hash_func(key) % t->capacity;
+
+    struct node* temp = t->array[index];
+    struct node* dummy;
+
+    if (compare_string(temp->key, key) == 0) {
+        dummy = temp;
+        t->array[index] = temp->next;
+        array_cleanup(dummy->value);
+        free(dummy);
+        return 0;
+    }
+
+    struct node* prev;
+
+    while (temp != NULL && (compare_string(temp->key, key) != 0)) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    prev->next = temp->next;
+    array_cleanup(temp->value);
+    free(temp);
+    return 0;
 }
 
 void table_cleanup(struct table *t) {
-    int i = 0;
+    unsigned long i = 0;
     while (i < t->capacity) {
         if (t->array[i] != NULL) {
 
@@ -129,4 +169,14 @@ void table_cleanup(struct table *t) {
     }
     free(t->array);
     free(t);
+}
+
+int compare_string(char* str1, char* str2) {
+    int rc = strcmp(str1, str2);
+    if (rc == 0) {
+        return 0;
+    }
+    else {
+        return 1;
+    }
 }

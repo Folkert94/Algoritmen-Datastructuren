@@ -35,3 +35,5 @@ int table_delete(struct table *t, char *key);
 
 /* Clean up the hash table data structure. */
 void table_cleanup(struct table *t);
+
+int compare_string(char* str1, char* str2);

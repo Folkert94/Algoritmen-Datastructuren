@@ -18,7 +18,6 @@
 #define MAX_TESTS 2
 #define HASH_TESTS 1
 
-
 /* Creates a hash table with word index for the specified file and parameters */
 struct table *create_from_file(char *filename, unsigned long start_size,
                 double max_load, unsigned long (*hash_func)(unsigned char *)) {
@@ -27,15 +26,44 @@ struct table *create_from_file(char *filename, unsigned long start_size,
         exit(1);
 
     char *line = malloc((LINE_LENGTH + 1) * sizeof(char));
-    
-    struct table *hash_table; 
-    // ... SOME CODE MISSING HERE ...
 
+    struct table *hash_table;
+    hash_table = table_init(start_size, max_load, hash_func);
+
+    const char s[128] = " \n:/.*'[]()&^%$@!?><,_+=-{}#1234567890;\"";
+    char *token;
+    char *test = "the";
+    int line_num = 1;
     while (fgets(line, LINE_LENGTH, fp)) {
-        // ... SOME CODE MISSING HERE ...
+        //
+        // printf("%d ", array_get(table_lookup(hash_table, test), 0));
+        // printf("%d \n", array_get(table_lookup(hash_table, test), 1));
+        token = strtok(line, s);
+        while(token != NULL) {
+            // printf("%d ", line_num);
+            //APARTE FUNCTIE
+            unsigned char *p = (unsigned char *)token;
+            while (*p) {
+               *p = tolower((unsigned char)*p);
+                p++;
+            }
+            char *a = malloc(sizeof(char) * strlen(token) + 1);
+            strcpy(a, token);
+
+            table_insert(hash_table, a, line_num);
+
+            token = strtok(NULL, s);
+
+            }
+        line_num++;
+
     }
+
+
+
     fclose(fp);
     free(line);
+
 
     return hash_table;
 }
@@ -43,10 +71,10 @@ struct table *create_from_file(char *filename, unsigned long start_size,
 /* Reads words from stdin and prints line lookup results per word. */
 void stdin_lookup(struct table *hash_table) {
     char *line = malloc((LINE_LENGTH + 1) * sizeof(char));
-    
-    while (fgets(line, LINE_LENGTH, stdin)) { 
+
+    while (fgets(line, LINE_LENGTH, stdin)) {
         // ... SOME CODE MISSING HERE ...
-    }   
+    }
     free(line);
 }
 
@@ -63,7 +91,7 @@ void timed_construction(char *filename) {
 
     for (int i = 0; i < START_TESTS; i++) {
         for (int j = 0; j < MAX_TESTS; j++) {
-            for (int k = 0 ; k < HASH_TESTS; k++) { 
+            for (int k = 0 ; k < HASH_TESTS; k++) {
                 clock_t start = clock();
                 struct table *hash_table = create_from_file(filename,
                         start_sizes[i], max_loads[j], hash_funcs[k]);
@@ -82,17 +110,17 @@ int main(int argc, char *argv[])
 {
     if (argc < 2)
         return 1;
-    
+
     if (argc == 3 && !strcmp(argv[2], "-t")) {
         timed_construction(argv[1]);
     } else {
         struct table *hash_table = create_from_file(argv[1], TABLE_START_SIZE,
-                MAX_LOAD_FACTOR, HASH_FUNCTION);  
-        
+                MAX_LOAD_FACTOR, HASH_FUNCTION);
+        char *test = "the";
+        printf("%d ", array_get(table_lookup(hash_table, test), 40));
         stdin_lookup(hash_table);
         table_cleanup(hash_table);
     }
 
     return 0;
 }
-

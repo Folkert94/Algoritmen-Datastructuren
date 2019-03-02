@@ -68,7 +68,7 @@ START_TEST (test_lookup_equals)
 
     ck_assert_int_eq(table_insert(t, a, 3), 0);
     ck_assert_int_eq(table_insert(t, b, 5), 0);
-
+    
     ck_assert_int_eq(array_get(table_lookup(t, c), 0), 3);
     ck_assert_int_eq(array_get(table_lookup(t, d), 0), 5);
 
