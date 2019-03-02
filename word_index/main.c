@@ -1,3 +1,11 @@
+/*
+* Folkert Stijnman
+* 10475206
+* Datastructuren en Algoritmen
+* main.c Word index implementation that stores words from .txt
+* into hash table and reads word from input stdin.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -18,6 +26,14 @@
 #define MAX_TESTS 2
 #define HASH_TESTS 1
 
+void lower_token(char *token) {
+    unsigned char *p = (unsigned char *)token;
+    while (*p) {
+       *p = tolower((unsigned char)*p);
+        p++;
+    }
+}
+
 /* Creates a hash table with word index for the specified file and parameters */
 struct table *create_from_file(char *filename, unsigned long start_size,
                 double max_load, unsigned long (*hash_func)(unsigned char *)) {
@@ -32,48 +48,46 @@ struct table *create_from_file(char *filename, unsigned long start_size,
 
     const char s[128] = " \n:/.*'[]()&^%$@!?><,_+=-{}#1234567890;\"";
     char *token;
-    char *test = "the";
     int line_num = 1;
     while (fgets(line, LINE_LENGTH, fp)) {
-        //
-        // printf("%d ", array_get(table_lookup(hash_table, test), 0));
-        // printf("%d \n", array_get(table_lookup(hash_table, test), 1));
+
         token = strtok(line, s);
         while(token != NULL) {
-            // printf("%d ", line_num);
-            //APARTE FUNCTIE
-            unsigned char *p = (unsigned char *)token;
-            while (*p) {
-               *p = tolower((unsigned char)*p);
-                p++;
-            }
+
+            lower_token(token);
             char *a = malloc(sizeof(char) * strlen(token) + 1);
             strcpy(a, token);
 
             table_insert(hash_table, a, line_num);
-
             token = strtok(NULL, s);
-
             }
         line_num++;
-
     }
-
-
-
     fclose(fp);
     free(line);
-
-
     return hash_table;
 }
 
 /* Reads words from stdin and prints line lookup results per word. */
 void stdin_lookup(struct table *hash_table) {
     char *line = malloc((LINE_LENGTH + 1) * sizeof(char));
+    const char s[128] = " \n:/.*'[]()&^%$@!?><,_+=-{}#1234567890;\"";
+    char *token;
 
     while (fgets(line, LINE_LENGTH, stdin)) {
-        // ... SOME CODE MISSING HERE ...
+        token = strtok(line, s);
+        while(token != NULL) {
+            lower_token(token);
+            token = strtok(token, "");
+
+        int i = 0;
+        while (array_get(table_lookup(hash_table, token), i) > 0){
+            printf("%d\n", array_get(table_lookup(hash_table, token), i));
+            i++;
+        }
+            token = strtok(NULL, s);
+            printf("\n");
+        }
     }
     free(line);
 }
@@ -116,11 +130,9 @@ int main(int argc, char *argv[])
     } else {
         struct table *hash_table = create_from_file(argv[1], TABLE_START_SIZE,
                 MAX_LOAD_FACTOR, HASH_FUNCTION);
-        char *test = "the";
-        printf("%d ", array_get(table_lookup(hash_table, test), 40));
+
         stdin_lookup(hash_table);
         table_cleanup(hash_table);
     }
-
     return 0;
 }

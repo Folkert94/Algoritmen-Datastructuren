@@ -1,5 +1,11 @@
-#include <stdlib.h>
+/*
+* Folkert Stijnman
+* 10475206
+* Datastructuren en Algoritmen
+* array.c Array structure for storing values and resizing dynamically
+*/
 
+#include <stdlib.h>
 #include "array.h"
 
 struct array {
@@ -22,7 +28,7 @@ void array_cleanup(struct array* a) {
 }
 
 int array_get(struct array *a, unsigned long index) {
-    if (a == NULL || a->data[index] == NULL) {
+    if (a == NULL || index >= a->capacity) {
         return -1;
     }
     return a->data[index];

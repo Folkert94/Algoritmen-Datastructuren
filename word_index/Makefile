@@ -79,4 +79,3 @@ check: clean all $(TESTS)
 	./check_hash_delete
 	@echo "\nChecking lookup table output..."
 	./check_lookup.sh
-

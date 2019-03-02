@@ -1,3 +1,10 @@
+/*
+* Folkert Stijnman
+* 10475206
+* Datastructuren en Algoritmen
+* hash_table.c Hash table architecture
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -35,14 +42,17 @@ struct node {
 struct node* node_init(char *key, int value) {
     struct node* n = malloc(sizeof(struct node));
     n->key = key;
-    n->value = array_init(4);
+    n->value = array_init(2);
     array_append(n->value, value);
     n->next = NULL;
     return n;
 }
 
-// TODO
-// node resize;
+// int table_load(struct table *t) {
+//     int counter = 0;
+//     while ()
+//     return 1;
+// }
 
 struct table *table_init(unsigned long capacity, double max_load,
                             unsigned long (*hash_func)(unsigned char *)) {
@@ -63,6 +73,7 @@ struct table *table_init(unsigned long capacity, double max_load,
 int table_insert(struct table *t, char *key, int value) {
     int index = t->hash_func(key) % t->capacity;
     struct array* temp = table_lookup(t, key);
+
     if (temp != NULL) {
         array_append(temp, value);
         return 0;
@@ -151,7 +162,6 @@ void table_cleanup(struct table *t) {
     while (i < t->capacity) {
         if (t->array[i] != NULL) {
 
-            // APARTE FUNCTIE?????
             struct node* tmp = t->array[i]->next;
             struct node* tmp2;
 
@@ -172,6 +182,9 @@ void table_cleanup(struct table *t) {
 }
 
 int compare_string(char* str1, char* str2) {
+    if (str1 == NULL || str2 == NULL) {
+        return 1;
+    }
     int rc = strcmp(str1, str2);
     if (rc == 0) {
         return 0;
