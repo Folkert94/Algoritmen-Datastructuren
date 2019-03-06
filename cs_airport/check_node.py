@@ -11,12 +11,12 @@ class TestNodeMethods(unittest.TestCase):
         self.assertEqual(n_1.get_key(), 3)
         self.assertEqual(n_2.get_key(), 5)
         self.assertEqual(n_3.get_key(), 5)
-        self.assertEqual(n_4.get_key(), 7) 
+        self.assertEqual(n_4.get_key(), 7)
         self.assertEqual(str(n_1), "3")
         self.assertEqual(str(n_2), "5")
         self.assertEqual(str(n_3), "5")
         self.assertEqual(str(n_4), "7")
-    
+
     def test_node_value(self):
         print("Running test_node_key")
         n_1 = Node(3, "ABC")
