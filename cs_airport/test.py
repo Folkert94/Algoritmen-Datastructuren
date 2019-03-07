@@ -6,9 +6,6 @@ n_2 = Node(5)
 n_3 = Node(3)
 n_4 = Node(8)
 
-h = BST([5, 9, 2, 1])
+h = BST([5, 3, 9, 6, 8])
 
-b = None
-a = max(b, 1)
-
-print(a)
+print(h.get_root().get_right_child().height)

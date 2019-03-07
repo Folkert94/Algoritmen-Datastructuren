@@ -45,7 +45,12 @@ class Node(object):
 
     def update_height(self):
         """Update the height based on the height of the left and right nodes."""
-        # self.height = 1 + max(self.left.height, self.right.height)
+        if self.get_left_child() == None:
+            self.height = 1 + self.get_right_child().height
+        elif self.get_right_child() == None:
+            self.height = 1 + self.get_left_child().height
+        else:
+            self.height = 1 + max(self.get_left_child().height, self.get_right_child().height)
 
     #
     # You can add any additional node functions you might need here
