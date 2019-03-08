@@ -20,20 +20,52 @@ class BST(object):
 
     def find_max(self):
         """Return the node with the maximum key in the BST."""
-        pass
+        node = self.get_root()
+        if node == None:
+            return None
+        if node.has_child() == None:
+            return node
+        while node.get_right_child() != None:
+            node = node.get_right_child()
+        return node
+
 
     def find_min(self):
         """Return the node with the minimum key in the BST."""
-        pass
+        node = self.get_root()
+        if node == None:
+            return None
+        if node.has_child() == None:
+            return node
+        while node.get_left_child() != None:
+            node = node.get_left_child()
+        return node
 
     def search(self, key):
         """Return the Node object containing the key if the key exists in
            the BST, else return None."""
-        pass
+        node = self.get_root()
+        if key == node:
+            return node
+        while node.has_child() != None:
+            if key < node and node.get_left_child() != None:
+                node = node.get_left_child()
+            if key > node and node.get_right_child() != None:
+                node = node.get_right_child()
+            else:
+                break
+        if node != None and node.key == key:
+            return node
+        else:
+            return None
+
 
     def contains(self, key):
         """ Return True if the key exists in the BST, else return False."""
-        pass
+        if self.search(key) == key:
+            return True
+        else:
+            return False
 
     def insert(self, key, value=None):
         """Create a new node for this key and value, and insert it into the BST.
@@ -73,16 +105,41 @@ class BST(object):
 
     def in_order_traversal(self):
         """Return a list of the Nodes in the tree in sorted order."""
-        pass
+        array = []
+        node = self.find_min()
+        array.append(node.key)
+        while node.next() != None:
+            node = node.next()
+            array.append(node.key)
+        return(array)
 
-    def breadth_first_traversal(self):
+    def breadth_first_traversal(self, height=1):
         """Return a list of lists, where each inner lists contains the elements
            of one layer in the tree. Layers are filled in breadth-first-order,
            and contain contain all elements linked in the BST, including the
            None elements.
            >> BST([5, 8]).breadth_first_traversal()
            [[Node(5)], [None, Node(8)], [None, None]]"""
-        pass
+
+        root = self.root
+        mem = []
+        witte_lijst = [[root.key]]
+        mem.append(root)
+        while mem:
+            temp = []
+            current = mem.pop(0)
+            if current.left:
+                mem.append(current.left)
+                temp.append(current.left.key)
+            if current.left == None:
+                temp.append(None)
+            if current.right:
+                mem.append(current.right)
+                temp.append(current.right.key)
+            if current.right == None:
+                temp.append(None)
+            witte_lijst.append(temp)
+        return witte_lijst
 
     def __str__(self):
         """Return a string containing the elements of the tree in breadth-first
@@ -94,4 +151,37 @@ class BST(object):
            _ _ _ _
            3 5 8
            """
-        pass
+        test = list(self.breadth_first_traversal())
+        s = ""
+
+        s += "{0} \n".format(test[0][0])
+        del(test[0])
+
+        for i in test[:1]:
+            count = 0
+            for j in i:
+                s += "{0} ".format(j)
+                if j != None:
+                    count += 1
+        s += "\n"
+        del(test[:1])
+
+        while test != []:
+            prev = count
+            count = 0
+            for i in test[:prev]:
+                for j in i:
+                    if j != None:
+                        s += "{0} ".format(j)
+                        count += 1
+                    else:
+                        s += "_ "
+            s += "\n"
+            del(test[:prev])
+
+        or_list = self.in_order_traversal()
+
+        for i in or_list:
+            s += "{0} ".format(i)
+        s += "\n"
+        return s

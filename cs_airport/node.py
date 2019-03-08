@@ -20,37 +20,35 @@ class Node(object):
         """Return the parent node of this node."""
         return self.parent
 
-    def is_left_child(self):
-        """Return True if node is left child"""
-        return self.parent and self.parent.left == self
-
     def get_left_child(self):
         """Return the left child node of this node."""
         return self.left
-
-    def is_right_child(self):
-        """Return True if node is right child"""
-        return self.parent and self.parent.right == self
 
     def get_right_child(self):
         """Return the right child node of this node."""
         return self.right
 
-    def has_child(self):
-        return (self.left | self.right)
-
     def get_height(self):
         """Return the height of this node."""
         return self.height
 
+    def max_height(self):
+        """Return max_height from children nodes"""
+        if self.left and self.right:
+            return max(self.left.height, self.right.height)
+        elif self.left is not None and self.right is None:
+            return self.left.height
+        elif self.left is None and self.right is not None:
+            return self.right.height
+        else:
+            return -1
+
     def update_height(self):
         """Update the height based on the height of the left and right nodes."""
-        if self.get_left_child() == None:
-            self.height = 1 + self.get_right_child().height
-        elif self.get_right_child() == None:
-            self.height = 1 + self.get_left_child().height
-        else:
-            self.height = 1 + max(self.get_left_child().height, self.get_right_child().height)
+        node = self
+        while node is not None:
+            node.height = node.max_height() + 1
+            node = node.parent
 
     #
     # You can add any additional node functions you might need here
@@ -79,6 +77,38 @@ class Node(object):
     def __ge__(self, other):
         """Returns True if the node is greater or equal to the other node or value."""
         return self.key >= other
+
+    def is_left_child(self):
+        """Return True if node is left child"""
+        return self.parent and self.parent.left == self
+
+    def is_right_child(self):
+        """Return True if node is right child"""
+        return self.parent and self.parent.right == self
+
+    def has_child(self):
+        """Return None if Node has no children"""
+        return (self.left or self.right)
+
+    def next(self):
+        """Return next node with larger value or None"""
+        if self.right is not None:
+            node = self.right
+            while node.left is not None:
+                node = node.left
+            return node
+
+        node = self
+        while node.parent is not None:
+            if node.parent.left == node:
+                return node.parent
+            node = node.parent
+
+        return None
+
+    def get_children(self):
+        "Returns children nodes"
+        return self.get_left_child(), self.get_right_child()
 
     def __str__(self):
         """Returns the string representation of the node in format: 'key/value'.
