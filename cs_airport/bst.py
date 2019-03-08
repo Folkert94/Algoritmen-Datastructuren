@@ -52,8 +52,10 @@ class BST(object):
         while node.has_child() != None:
             if key < node and node.get_left_child() != None:
                 node = node.get_left_child()
+                continue
             if key > node and node.get_right_child() != None:
                 node = node.get_right_child()
+                continue
             else:
                 break
         if node != None and node.key == key:
@@ -77,33 +79,30 @@ class BST(object):
         if self.contains(key):
             return None
         if self.root:
-            return self._insert(key, value, self.root)
+            return self._insert(self.root, Node(key, value))
         else:
             self.root = Node(key, value)
             self.root.height = 0
             return self.root
 
-    def _insert(self, key, value, node):
+    def _insert(self, node, new_node):
         """Recursive function for insert"""
-        temp = Node(key, value)
-        if key < node.key:
+        if new_node < node.key:
             if node.get_left_child():
-                self._insert(key, value, node.left)
+                return self._insert(node.left, new_node)
             else:
-                node.left = Node(key, value)
-                node.left.parent = node
-                node.update_height()
-                print(node.left)
-                return node.left
+                node.left = new_node
+                new_node.parent = node
+                new_node.update_height()
+                return new_node
         else:
             if node.get_right_child():
-                self._insert(key, value, node.right)
+                return self._insert(node.right, new_node)
             else:
-                node.right = Node(key, value)
-                node.right.parent = node
-                node.update_height()
-                print(node.right)
-                return node.right
+                node.right = new_node
+                new_node.parent = node
+                new_node.update_height()
+                return new_node
 
     def delete(self, key):
         """Remove the Node object containing the key if the key exists in
@@ -111,7 +110,19 @@ class BST(object):
 
            The returned node is the actual Node object that got removed
            from the BST, and so might be successor of the removed key."""
-        pass
+        node = self.search(key)
+        if node.has_child() == None:
+            if node.is_right_child():
+                node.parent.right = None
+                temp = node
+                del(node)
+                return temp
+            if node.is_left_child():
+                node.parent.left = None
+                temp = node
+                del(node)
+                return temp
+
 
     def in_order_traversal(self):
         """Return a list of the Nodes in the tree in sorted order."""
