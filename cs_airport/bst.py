@@ -45,6 +45,8 @@ class BST(object):
         """Return the Node object containing the key if the key exists in
            the BST, else return None."""
         node = self.get_root()
+        if node == None:
+            return None
         if key == node:
             return node
         while node.has_child() != None:
@@ -72,14 +74,18 @@ class BST(object):
 
            Return the new inserted node, or None if the key and value could not
            be inserted."""
+        if self.contains(key):
+            return None
         if self.root:
-            self._insert(key, value, self.root)
+            return self._insert(key, value, self.root)
         else:
             self.root = Node(key, value)
             self.root.height = 0
+            return self.root
 
     def _insert(self, key, value, node):
         """Recursive function for insert"""
+        temp = Node(key, value)
         if key < node.key:
             if node.get_left_child():
                 self._insert(key, value, node.left)
@@ -87,6 +93,8 @@ class BST(object):
                 node.left = Node(key, value)
                 node.left.parent = node
                 node.update_height()
+                print(node.left)
+                return node.left
         else:
             if node.get_right_child():
                 self._insert(key, value, node.right)
@@ -94,6 +102,8 @@ class BST(object):
                 node.right = Node(key, value)
                 node.right.parent = node
                 node.update_height()
+                print(node.right)
+                return node.right
 
     def delete(self, key):
         """Remove the Node object containing the key if the key exists in
@@ -107,10 +117,10 @@ class BST(object):
         """Return a list of the Nodes in the tree in sorted order."""
         array = []
         node = self.find_min()
-        array.append(node.key)
+        array.append(node)
         while node.next() != None:
             node = node.next()
-            array.append(node.key)
+            array.append(node)
         return(array)
 
     def breadth_first_traversal(self, height=1):
@@ -123,19 +133,19 @@ class BST(object):
 
         root = self.root
         mem = []
-        witte_lijst = [[root.key]]
+        witte_lijst = [[root]]
         mem.append(root)
         while mem:
             temp = []
             current = mem.pop(0)
             if current.left:
                 mem.append(current.left)
-                temp.append(current.left.key)
+                temp.append(current.get_left_child())
             if current.left == None:
                 temp.append(None)
             if current.right:
                 mem.append(current.right)
-                temp.append(current.right.key)
+                temp.append(current.get_right_child())
             if current.right == None:
                 temp.append(None)
             witte_lijst.append(temp)
@@ -160,9 +170,11 @@ class BST(object):
         for i in test[:1]:
             count = 0
             for j in i:
-                s += "{0} ".format(j)
                 if j != None:
+                    s += "{0} ".format(j)
                     count += 1
+                else:
+                    s += "_ "
         s += "\n"
         del(test[:1])
 
@@ -183,5 +195,5 @@ class BST(object):
 
         for i in or_list:
             s += "{0} ".format(i)
-        s += "\n"
+
         return s
