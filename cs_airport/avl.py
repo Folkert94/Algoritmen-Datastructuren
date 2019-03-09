@@ -33,6 +33,11 @@ class AVL(BST):
             return None
 
         self.fix_balance(node)
+        if self.get_root().weight() > 1:
+            self.fix_balance(self.find_max())
+        if self.get_root().weight() < -1:
+            self.fix_balance(self.find_min())
+
         return node
 
     @staticmethod
@@ -71,23 +76,28 @@ class AVL(BST):
         """Performs a sequence of rotations to fix the balance of a node and
            all its parent nodes if needed to maintain the AVL property."""
         while node.parent != None and node.parent.parent != None:
+
             if node.parent.parent.weight() < -1 and node.parent.weight() < 0:
                 new_top = self.right_rotate(node.parent.parent)
                 if new_top.parent is None:
                     self.root = new_top
+
             elif node.parent.parent.weight() > 1 and node.parent.weight() > 0:
                 new_top = self.left_rotate(node.parent.parent)
                 if new_top.parent is None:
                     self.root = new_top
+
             elif node.parent.parent.weight() < -1 and node.parent.weight() > 0:
                 temp = self.left_rotate(node.parent)
                 new_top = self.right_rotate(temp.parent)
                 if new_top.parent is None:
                     self.root = new_top
+
             elif node.parent.parent.weight() > 1 and node.parent.weight() < 0:
                 temp = self.right_rotate(node.parent)
                 new_top = self.left_rotate(temp.parent)
                 if new_top.parent is None:
                     self.root = new_top
+
             else:
                 node = node.parent

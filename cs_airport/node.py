@@ -115,21 +115,6 @@ class Node(object):
 
         return None
 
-    def prev(self):
-        """Return next node with smaller value or None"""
-        if self.left is not None:
-            node = self.left
-            if node.parent.left == node:
-                return node
-            node = node.parent
-        node = self
-        while node.parent is not None:
-            if node.parent.right == node:
-                return node.parent
-            node = node.parent
-
-        return None
-
     def get_children(self):
         "Returns children nodes"
         return self.get_left_child(), self.get_right_child()

@@ -40,11 +40,10 @@ class BST(object):
             node = node.get_left_child()
         return node
 
-    def search(self, key, node=None):
+    def search(self, key):
         """Return the Node object containing the key if the key exists in
            the BST, else return None."""
-        if node == None:
-            node = self.get_root()
+        node = self.get_root()
 
         if node == None:
             return None
@@ -74,7 +73,6 @@ class BST(object):
 
     def insert(self, key, value=None):
         """Create a new node for this key and value, and insert it into the BST.
-
            Return the new inserted node, or None if the key and value could not
            be inserted."""
         if self.contains(key):
@@ -105,14 +103,13 @@ class BST(object):
                 new_node.update_height()
                 return new_node
 
-    def delete(self, key, node=None):
+    def delete(self, key):
         """Remove the Node object containing the key if the key exists in
            the BST and return the removed node, else return None.
-
            The returned node is the actual Node object that got removed
            from the BST, and so might be successor of the removed key."""
 
-        node = self.search(key, node)
+        node = self.search(key)
         if node is None:
             return None
 
@@ -148,11 +145,44 @@ class BST(object):
 
         else:
             next = node.next()
-            temp_key = next.key
-            node.key = temp_key
-            return self.delete(next.key, next)
+            node.key = next.get_key()
+            return self._delete(next)
 
+    def _delete(self, key):
+        """delete next node"""
+        node = self.search(key).next()
+        if node is None:
+            return None
 
+        if node.has_child() == None:
+            if node.is_right_child():
+                node.parent.right = None
+                temp = node
+                del(node)
+                temp.update_height()
+                return temp
+            if node.is_left_child():
+                node.parent.left = None
+                temp = node
+                del(node)
+                temp.update_height()
+                return temp
+
+        if node.has_one_child():
+            if node == node.parent.left:
+                node.parent.left = node.has_child()
+                node.has_child().parent = node.parent
+                temp = node
+                del(node)
+                temp.update_height()
+                return temp
+            if node == node.parent.right:
+                node.parent.right = node.has_child()
+                node.has_child().parent = node.parent
+                temp = node
+                del(node)
+                temp.update_height()
+                return temp
 
     def in_order_traversal(self):
         """Return a list of the Nodes in the tree in sorted order."""
@@ -174,7 +204,7 @@ class BST(object):
 
         root = self.root
         mem = []
-        witte_lijst = [[root]]
+        bft_list = [[root]]
         mem.append(root)
         while mem:
             temp = []
@@ -189,8 +219,8 @@ class BST(object):
                 temp.append(current.get_right_child())
             if current.right == None:
                 temp.append(None)
-            witte_lijst.append(temp)
-        return witte_lijst
+            bft_list.append(temp)
+        return bft_list
 
     def __str__(self):
         """Return a string containing the elements of the tree in breadth-first
