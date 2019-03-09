@@ -62,7 +62,7 @@ class Airport(AVL):
         s = ""
         for i in self.in_order_traversal():
             s += "{0}/{1} ".format(i.key, i.value)
-        return s
+        return s.strip()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Sort a list of elements.')
