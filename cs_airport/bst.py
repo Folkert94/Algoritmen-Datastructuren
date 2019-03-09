@@ -28,7 +28,6 @@ class BST(object):
             node = node.get_right_child()
         return node
 
-
     def find_min(self):
         """Return the node with the minimum key in the BST."""
         node = self.get_root()
@@ -149,7 +148,7 @@ class BST(object):
             return self._delete(next)
 
     def _delete(self, key):
-        """delete next node"""
+        """Delete next/duplicate node"""
         node = self.search(key).next()
         if node is None:
             return None

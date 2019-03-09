@@ -154,4 +154,7 @@ class Node(object):
             return "{0}/{1}".format(self.key, self.value)
 
     def __repr__(self):
-        return "Node({0})".format(self.key)
+        if not self.value:
+            return "Node({0})".format(self.key)
+        else:
+            return "{0}/{1}".format(self.key, self.value)

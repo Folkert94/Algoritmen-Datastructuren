@@ -14,7 +14,7 @@ class AVL(BST):
 
            Return the new inserted node, or None if the key and value could not
            be inserted."""
-        node = BST.insert(self, key, value=None)
+        node = BST.insert(self, key, value)
         if node is None:
             return None
 

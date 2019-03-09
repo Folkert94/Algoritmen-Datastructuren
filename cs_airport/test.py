@@ -2,6 +2,9 @@ from node import Node
 from bst import BST
 from avl import AVL
 
-h = AVL([6, 4, 5, 10])
-h.delete(4)
+h = AVL()
+h.insert(37)
+h.insert(252)
+h.insert(87)
+
 print(str(h))
