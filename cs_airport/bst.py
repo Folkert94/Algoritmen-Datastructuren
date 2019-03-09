@@ -113,7 +113,7 @@ class BST(object):
            from the BST, and so might be successor of the removed key."""
 
         node = self.search(key, node)
-        if node == None:
+        if node is None:
             return None
 
         if node.has_child() == None:

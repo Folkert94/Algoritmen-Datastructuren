@@ -28,7 +28,12 @@ class AVL(BST):
 
            Return the node that actually got removed from the AVL, which might
            be successor of the removed key."""
-        pass
+        node = BST.delete(self, key)
+        if node is None:
+            return None
+
+        self.fix_balance(node)
+        return node
 
     @staticmethod
     def left_rotate(node):
