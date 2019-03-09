@@ -15,27 +15,11 @@ class AVL(BST):
            Return the new inserted node, or None if the key and value could not
            be inserted."""
         node = BST.insert(self, key, value=None)
-        if node.parent != None:
-            if node.parent.weight() > 1:
-                new_top = self.left_rotate(node.parent)
-                if new_top.parent is None:
-                    self.root = new_top
+        if node is None:
+            return None
 
-        if node.parent != None:
-            if node.parent.weight() < -1:
-                new_top = self.right_rotate(node.parent)
-                if new_top.parent is None:
-                    self.root = new_top
-
-        if self.root.weight() > 1:
-            new_top = self.left_rotate(self.root)
-            if new_top.parent is None:
-                self.root = new_top
-
-        if self.root.weight() < -1:
-            new_top = self.right_rotate(self.root)
-            if new_top.parent is None:
-                self.root = new_top
+        self.fix_balance(node)
+        return node
 
     def delete(self, key):
         """Remove the Node object containing the key if the key exists in
@@ -48,6 +32,21 @@ class AVL(BST):
 
     @staticmethod
     def left_rotate(node):
+        """Performs a right rotation of the specified node."""
+        node1 = node.right
+        node2 = node1.left
+        node.right = node2
+        node1.left = node
+        new_par = node.swap_nodes(node1, node2)
+
+        if node2 is not None:
+            node2.update_height()
+        node.update_height()
+
+        return new_par
+
+    @staticmethod
+    def right_rotate(node):
         """Performs a left rotation of the specified node."""
         node1 = node.left
         node2 = node1.right
@@ -63,22 +62,27 @@ class AVL(BST):
 
         return new_par
 
-    @staticmethod
-    def right_rotate(node):
-        """Performs a right rotation of the specified node."""
-        node1 = node.right
-        node2 = node1.left
-        node.right = node2
-        node1.left = node
-        new_par = node.swap_nodes(node1, node2)
-        
-        if node2 is not None:
-            node2.update_height()
-        node.update_height()
-
-        return new_par
-
     def fix_balance(self, node):
         """Performs a sequence of rotations to fix the balance of a node and
            all its parent nodes if needed to maintain the AVL property."""
-        pass
+        while node.parent != None and node.parent.parent != None:
+            if node.parent.parent.weight() < -1 and node.parent.weight() < 0:
+                new_top = self.right_rotate(node.parent.parent)
+                if new_top.parent is None:
+                    self.root = new_top
+            elif node.parent.parent.weight() > 1 and node.parent.weight() > 0:
+                new_top = self.left_rotate(node.parent.parent)
+                if new_top.parent is None:
+                    self.root = new_top
+            elif node.parent.parent.weight() < -1 and node.parent.weight() > 0:
+                temp = self.left_rotate(node.parent)
+                new_top = self.right_rotate(temp.parent)
+                if new_top.parent is None:
+                    self.root = new_top
+            elif node.parent.parent.weight() > 1 and node.parent.weight() < 0:
+                temp = self.right_rotate(node.parent)
+                new_top = self.left_rotate(temp.parent)
+                if new_top.parent is None:
+                    self.root = new_top
+            else:
+                node = node.parent

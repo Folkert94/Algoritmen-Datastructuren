@@ -140,11 +140,11 @@ class Node(object):
             return 0
         if self.has_one_child():
             if self.right != None:
-                return - self.height
-            if self.left != None:
                 return self.height
+            if self.left != None:
+                return - self.height
         else:
-            return self.left.height - self.right.height
+            return self.right.height - self.left.height
 
     def swap_nodes(self, advance, temp):
         """Swap parent nodes and return the new top node"""
