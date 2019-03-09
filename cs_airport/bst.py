@@ -8,7 +8,6 @@ class BST(object):
         for i in range(len(key_list)):
             self.insert(key_list[i])
 
-
     def get_root(self):
         """Return the root of the BST."""
         return self.root
@@ -41,10 +40,12 @@ class BST(object):
             node = node.get_left_child()
         return node
 
-    def search(self, key):
+    def search(self, key, node=None):
         """Return the Node object containing the key if the key exists in
            the BST, else return None."""
-        node = self.get_root()
+        if node == None:
+            node = self.get_root()
+
         if node == None:
             return None
         if key == node:
@@ -104,24 +105,53 @@ class BST(object):
                 new_node.update_height()
                 return new_node
 
-    def delete(self, key):
+    def delete(self, key, node=None):
         """Remove the Node object containing the key if the key exists in
            the BST and return the removed node, else return None.
 
            The returned node is the actual Node object that got removed
            from the BST, and so might be successor of the removed key."""
-        node = self.search(key)
+
+        node = self.search(key, node)
+        if node == None:
+            return None
+
         if node.has_child() == None:
             if node.is_right_child():
                 node.parent.right = None
                 temp = node
                 del(node)
+                temp.update_height()
                 return temp
             if node.is_left_child():
                 node.parent.left = None
                 temp = node
                 del(node)
+                temp.update_height()
                 return temp
+
+        if node.has_one_child():
+            if node == node.parent.left:
+                node.parent.left = node.has_child()
+                node.has_child().parent = node.parent
+                temp = node
+                del(node)
+                temp.update_height()
+                return temp
+            if node == node.parent.right:
+                node.parent.right = node.has_child()
+                node.has_child().parent = node.parent
+                temp = node
+                del(node)
+                temp.update_height()
+                return temp
+
+        else:
+            next = node.next()
+            temp_key = next.key
+            node.key = temp_key
+            return self.delete(next.key, next)
+
 
 
     def in_order_traversal(self):

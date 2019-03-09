@@ -87,8 +87,17 @@ class Node(object):
         return self.parent and self.parent.right == self
 
     def has_child(self):
-        """Return None if Node has no children"""
+        """Return None if Node has no children or returns one of children"""
         return (self.left or self.right)
+
+    def has_one_child(self):
+        """Return True if Node has one child"""
+        if self.left == None and self.right != None:
+            return True
+        if self.left != None and self.right == None:
+            return True
+        else:
+            return False
 
     def next(self):
         """Return next node with larger value or None"""
@@ -106,9 +115,50 @@ class Node(object):
 
         return None
 
+    def prev(self):
+        """Return next node with smaller value or None"""
+        if self.left is not None:
+            node = self.left
+            if node.parent.left == node:
+                return node
+            node = node.parent
+        node = self
+        while node.parent is not None:
+            if node.parent.right == node:
+                return node.parent
+            node = node.parent
+
+        return None
+
     def get_children(self):
         "Returns children nodes"
         return self.get_left_child(), self.get_right_child()
+
+    def weight(self):
+        """Weighs children nodes and returns weight"""
+        if self.has_child() == None:
+            return 0
+        if self.has_one_child():
+            if self.right != None:
+                return - self.height
+            if self.left != None:
+                return self.height
+        else:
+            return self.left.height - self.right.height
+
+    def swap_nodes(self, advance, temp):
+        """Swap parent nodes and return the new top node"""
+        advance.parent = self.parent
+        self.parent = advance
+        if temp is not None:
+            temp.parent = self
+
+        if advance.parent is not None:
+            if advance.parent.right == self:
+                advance.parent.right = advance
+            if advance.parent.left == self:
+                advance.parent.left = advance
+        return advance
 
     def __str__(self):
         """Returns the string representation of the node in format: 'key/value'.
@@ -120,5 +170,3 @@ class Node(object):
 
     def __repr__(self):
         return "Node({0})".format(self.key)
-
-    
