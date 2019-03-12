@@ -1,3 +1,14 @@
+"""
+Folkert Stijnman
+
+10475206
+
+Datastructuren & Algoritmen
+
+Node class for the Binary Search Tree structure.
+
+"""
+
 class Node(object):
     def __init__(self, key, value=None):
         """Store the key and value in the node and set the other attributes."""
@@ -32,21 +43,10 @@ class Node(object):
         """Return the height of this node."""
         return self.height
 
-    def max_height(self):
-        """Return max_height from children nodes"""
-        if self.left and self.right:
-            return max(self.left.height, self.right.height)
-        elif self.left is not None and self.right is None:
-            return self.left.height
-        elif self.left is None and self.right is not None:
-            return self.right.height
-        else:
-            return -1
-
     def update_height(self):
         """Update the height based on the height of the left and right nodes."""
         node = self
-        while node is not None:
+        while node:
             node.height = node.max_height() + 1
             node = node.parent
 
@@ -100,24 +100,18 @@ class Node(object):
             return False
 
     def next(self):
-        """Return next node with larger value or None"""
-        if self.right is not None:
+        """Return next node with larger value"""
+        if self.right:
             node = self.right
-            while node.left is not None:
+            while node.left:
                 node = node.left
             return node
 
         node = self
-        while node.parent is not None:
+        while node.parent:
             if node.parent.left == node:
                 return node.parent
             node = node.parent
-
-        return None
-
-    def get_children(self):
-        "Returns children nodes"
-        return self.get_left_child(), self.get_right_child()
 
     def weight(self):
         """Weighs children nodes and returns weight"""
@@ -131,19 +125,47 @@ class Node(object):
         else:
             return self.right.height - self.left.height
 
-    def swap_nodes(self, advance, temp):
-        """Swap parent nodes and return the new top node"""
-        advance.parent = self.parent
-        self.parent = advance
-        if temp is not None:
-            temp.parent = self
+    def max_height(self):
+        """Return max height from children nodes"""
+        if self.left and self.right:
+            return max(self.left.height, self.right.height)
+        elif self.left:
+            return self.left.height
+        elif self.right:
+            return self.right.height
+        else:
+            return -1
 
-        if advance.parent is not None:
-            if advance.parent.right == self:
-                advance.parent.right = advance
-            if advance.parent.left == self:
-                advance.parent.left = advance
-        return advance
+    def delete_child_or_leaf(self):
+        if self.has_child() == None:
+            if self.is_right_child():
+                self.parent.right = None
+                temp = self
+                del(self)
+                temp.update_height()
+                return temp
+            if self.is_left_child():
+                self.parent.left = None
+                temp = self
+                del(self)
+                temp.update_height()
+                return temp
+
+        if self.has_one_child():
+            if self == self.parent.left:
+                self.parent.left = self.has_child()
+                self.has_child().parent = self.parent
+                temp = self
+                del(self)
+                temp.update_height()
+                return temp
+            if self == self.parent.right:
+                self.parent.right = self.has_child()
+                self.has_child().parent = self.parent
+                temp = self
+                del(self)
+                temp.update_height()
+                return temp
 
     def __str__(self):
         """Returns the string representation of the node in format: 'key/value'.

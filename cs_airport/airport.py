@@ -1,18 +1,20 @@
+"""
+Folkert Stijnman
+
+10475206
+
+Datastructuren & Algoritmen
+
+Airport implementation using BST and Airport.
+
+"""
+
 import argparse
 
-from avl import AVL
-
-## NOTE: Incase you did not get AVL working, use this:
-#from bst import BST
-#class Airport(BST):
-#    def __init__(self, wait_time=300000, simple=False):
-#        BST.__init__(self)
-
-class Airport(AVL):
+from bst import BST
+class Airport(BST):
     def __init__(self, wait_time=300000, simple=False):
-        """Creates a new Airport instance and sets its basic attributes."""
-        AVL.__init__(self)
-
+        BST.__init__(self)
         self.wait_time = wait_time
         self.simple = simple
 
@@ -54,7 +56,7 @@ class Airport(AVL):
             node = self.find_conflict(time)
             time = node.key + self.wait_time
 
-        node = AVL.insert(self, time, tailnumber)
+        node = BST.insert(self, time, tailnumber)
         return node
 
     def __str__(self):

@@ -1,3 +1,14 @@
+"""
+Folkert Stijnman
+
+10475206
+
+Datastructuren & Algoritmen
+
+Binary Search Tree class for the Binary Search Tree structure.
+
+"""
+
 from node import Node
 
 class BST(object):
@@ -62,7 +73,6 @@ class BST(object):
         else:
             return None
 
-
     def contains(self, key):
         """ Return True if the key exists in the BST, else return False."""
         if self.search(key) == key:
@@ -84,7 +94,8 @@ class BST(object):
             return self.root
 
     def _insert(self, node, new_node):
-        """Recursive function for insert"""
+        """Helper function for insert, keeps searching until
+           last node in subtree found."""
         if new_node < node.key:
             if node.get_left_child():
                 return self._insert(node.left, new_node)
@@ -107,91 +118,37 @@ class BST(object):
            the BST and return the removed node, else return None.
            The returned node is the actual Node object that got removed
            from the BST, and so might be successor of the removed key."""
-
         node = self.search(key)
         if node is None:
             return None
 
-        if node.has_child() == None:
-            if node.is_right_child():
-                node.parent.right = None
-                temp = node
-                del(node)
-                temp.update_height()
-                return temp
-            if node.is_left_child():
-                node.parent.left = None
-                temp = node
-                del(node)
-                temp.update_height()
-                return temp
-
-        if node.has_one_child():
-            if node == node.parent.left:
-                node.parent.left = node.has_child()
-                node.has_child().parent = node.parent
-                temp = node
-                del(node)
-                temp.update_height()
-                return temp
-            if node == node.parent.right:
-                node.parent.right = node.has_child()
-                node.has_child().parent = node.parent
-                temp = node
-                del(node)
-                temp.update_height()
-                return temp
+        if node.has_child() == None or node.has_one_child():
+            return node.delete_child_or_leaf()
 
         else:
             next = node.next()
             node.key = next.get_key()
-            return self._delete(next)
+            return self.delete_next(next)
 
-    def _delete(self, key):
-        """Delete next/duplicate node"""
+    def delete_next(self, key):
+        """Helper function for deleting node with two children. Deletes
+           successor node."""
         node = self.search(key).next()
         if node is None:
             return None
 
-        if node.has_child() == None:
-            if node.is_right_child():
-                node.parent.right = None
-                temp = node
-                del(node)
-                temp.update_height()
-                return temp
-            if node.is_left_child():
-                node.parent.left = None
-                temp = node
-                del(node)
-                temp.update_height()
-                return temp
-
-        if node.has_one_child():
-            if node == node.parent.left:
-                node.parent.left = node.has_child()
-                node.has_child().parent = node.parent
-                temp = node
-                del(node)
-                temp.update_height()
-                return temp
-            if node == node.parent.right:
-                node.parent.right = node.has_child()
-                node.has_child().parent = node.parent
-                temp = node
-                del(node)
-                temp.update_height()
-                return temp
+        if node.has_child() == None or node.has_one_child():
+            return node.delete_child_or_leaf()
 
     def in_order_traversal(self):
         """Return a list of the Nodes in the tree in sorted order."""
-        array = []
+        iot_list = []
         node = self.find_min()
-        array.append(node)
+        iot_list.append(node)
         while node.next() != None:
             node = node.next()
-            array.append(node)
-        return(array)
+            iot_list.append(node)
+        return iot_list
 
     def breadth_first_traversal(self, height=1):
         """Return a list of lists, where each inner lists contains the elements
@@ -231,39 +188,39 @@ class BST(object):
            _ _ _ _
            3 5 8
            """
-        test = list(self.breadth_first_traversal())
-        s = ""
+        bft_list = list(self.breadth_first_traversal())
+        final_string = ""
 
-        s += "{0} \n".format(test[0][0])
-        del(test[0])
+        final_string += "{0} \n".format(bft_list[0][0])
+        del(bft_list[0])
 
-        for i in test[:1]:
+        for i in bft_list[:1]:
             count = 0
             for j in i:
                 if j != None:
-                    s += "{0} ".format(j)
+                    final_string += "{0} ".format(j)
                     count += 1
                 else:
-                    s += "_ "
-        s += "\n"
-        del(test[:1])
+                    final_string += "_ "
+        final_string += "\n"
+        del(bft_list[:1])
 
-        while test != []:
+        while bft_list != []:
             prev = count
             count = 0
-            for i in test[:prev]:
+            for i in bft_list[:prev]:
                 for j in i:
                     if j != None:
-                        s += "{0} ".format(j)
+                        final_string += "{0} ".format(j)
                         count += 1
                     else:
-                        s += "_ "
-            s += "\n"
-            del(test[:prev])
+                        final_string += "_ "
+            final_string += "\n"
+            del(bft_list[:prev])
 
         or_list = self.in_order_traversal()
 
         for i in or_list:
-            s += "{0} ".format(i)
+            final_string += "{0} ".format(i)
 
-        return s
+        return final_string
