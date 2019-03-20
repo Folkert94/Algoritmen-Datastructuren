@@ -1,12 +1,13 @@
 from node import Node
-from layer import Layer
+from flat import Flat
 import numpy as np
 import csv
 
-l1 = Layer((13, 13))
+l1 = Flat((18, 13, 1))
 
-gate_24 = l1.is_gate((1, 11), 24)
-gate_5 = l1.is_gate((3, 2), 5)
-print(l1.find_route(gate_24, gate_5))
+n1 = l1.insert_origin_z((0, 0, 1))
+n2 = l1.insert_origin_z((0, 0, 2))
 
-print(l1)
+print(n2)
+
+print(l1.get_origin().up.up.down)

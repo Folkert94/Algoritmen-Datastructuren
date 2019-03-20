@@ -9,6 +9,8 @@ class Node(object):
     def __init__(self, coordinates, gate=False):
         """Initializing node. Usage Node((4, 2, 1), True)"""
         self.coordinates = coordinates
+        self.route = 'No Route'
+        self.gate = gate
         self.gate_num = 0
         self.gcost = None
         self.hcost = None
@@ -18,8 +20,7 @@ class Node(object):
         self.north = None
         self.south = None
         self.up = None
-        self.route = ''
-        self.gate = gate
+        self.down = None
 
     def man_distance(self, other):
         """Input two nodes and calculate the Manhattan distance"""
