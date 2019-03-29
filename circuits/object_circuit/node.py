@@ -9,10 +9,11 @@ class Node(object):
     def __init__(self, coordinates, gate=False):
         """Initializing node. Usage Node((4, 2, 1), True)"""
         self.coordinates = coordinates
+        self.weight = 0
         self.route = 'No Route'
         self.gate = gate
         self.gate_num = 0
-        self.gcost = None
+        self.gcost = 0
         self.hcost = None
         self.fcost = None
         self.west = None
@@ -26,8 +27,24 @@ class Node(object):
         """Input two nodes and calculate the Manhattan distance"""
         c_1 = self.coordinates
         c_2 = other.coordinates
-        man_dist = abs(c_1[0] - c_2[0]) + abs(c_1[1] - c_2[1])
+        man_dist = abs(c_1[0] - c_2[0]) + abs(c_1[1] - c_2[1]) + abs(c_1[2] - c_2[2])
         return man_dist
+
+    def find_neigbors(self):
+        neighbors = []
+        if self.north:
+            neighbors.append(self.north)
+        if self.south:
+            neighbors.append(self.south)
+        if self.west:
+            neighbors.append(self.west)
+        if self.east:
+            neighbors.append(self.east)
+        if self.up:
+            neighbors.append(self.up)
+        if self.down:
+            neighbors.append(self.down)
+        return neighbors
 
     def find_adjacent(self, goal_node):
         adj_list = []
@@ -39,6 +56,10 @@ class Node(object):
             adj_list.append(self.west)
         if self.east and self.east.gate == False or self.east is goal_node:
             adj_list.append(self.east)
+        if self.up and self.up.gate == False or self.up is goal_node:
+            adj_list.append(self.up)
+        if self.down and self.down.gate == False or self.down is goal_node:
+            adj_list.append(self.down)
         return adj_list
 
     def __str__(self):
@@ -48,7 +69,8 @@ class Node(object):
             return "{0}, Gate".format(self.coordinates)
 
     def __repr__(self):
-        if self.gate is False:
-            return "Node({0})".format(self.coordinates)
-        if self.gate is True:
-            return "Node({0}, {1})".format(self.coordinates, self.gate)
+        return "Node({0})".format(self.coordinates)
+        # if self.gate is False:
+        #     return "Node({0})".format(self.coordinates)
+        # if self.gate is True:
+        #     return "Node({0}, {1})".format(self.coordinates, self.gate)
