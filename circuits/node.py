@@ -9,13 +9,13 @@ class Node(object):
     def __init__(self, coordinates, gate=False):
         """Initializing node. Usage Node((4, 2, 1), True)"""
         self.coordinates = coordinates
-        self.weight = 0
         self.route = 'No Route'
         self.gate = gate
         self.gate_num = 0
         self.gcost = 0
         self.hcost = None
         self.fcost = None
+
         self.west = None
         self.east = None
         self.north = None
@@ -30,23 +30,8 @@ class Node(object):
         man_dist = abs(c_1[0] - c_2[0]) + abs(c_1[1] - c_2[1]) + abs(c_1[2] - c_2[2])
         return man_dist
 
-    def find_neigbors(self):
-        neighbors = []
-        if self.north:
-            neighbors.append(self.north)
-        if self.south:
-            neighbors.append(self.south)
-        if self.west:
-            neighbors.append(self.west)
-        if self.east:
-            neighbors.append(self.east)
-        if self.up:
-            neighbors.append(self.up)
-        if self.down:
-            neighbors.append(self.down)
-        return neighbors
-
     def find_adjacent(self, goal_node):
+        """Find adjacent nodes for pathfinding"""
         adj_list = []
         if self.north and self.north.gate == False or self.north is goal_node:
             adj_list.append(self.north)
@@ -70,7 +55,3 @@ class Node(object):
 
     def __repr__(self):
         return "Node({0})".format(self.coordinates)
-        # if self.gate is False:
-        #     return "Node({0})".format(self.coordinates)
-        # if self.gate is True:
-        #     return "Node({0}, {1})".format(self.coordinates, self.gate)

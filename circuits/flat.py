@@ -1,7 +1,7 @@
 """
 Folkert Stijnman    10475206
 
-Layer class for layer of nodes in given dimensions
+Flat class for layers of nodes in given dimensions
 
 """
 import numpy as np
@@ -9,7 +9,7 @@ from node import Node
 
 class Flat(object):
     def __init__(self, dimensions):
-        """Initializing grid. Usage Layer((18, 13))"""
+        """Initializing grid. Usage: Flat((18, 5, 4))"""
         self.origin = None
         self.dimensions = dimensions
         for x in range(dimensions[0]):
@@ -21,6 +21,7 @@ class Flat(object):
                         self.insert_upper_floors((x, y, z))
 
     def insert_ground_floor(self, coordinates):
+        """Insert ground floor"""
         if sum(coordinates) == 0:
             return self.insert_origin()
         if coordinates[0] == 0:
@@ -31,6 +32,7 @@ class Flat(object):
             return self.insert_regular(coordinates)
 
     def insert_upper_floors(self, coordinates):
+        """Insert upper floor"""
         if coordinates[0] + coordinates[1] == 0:
             return self.insert_origin_z(coordinates)
         if coordinates[0] == 0:
@@ -41,6 +43,7 @@ class Flat(object):
             self.insert_upper_regular(coordinates)
 
     def insert_upper_regular(self, coordinates):
+        """Insert regular node in upper floor"""
         node = self.origin
         i = 0
         while node.up != None and i < coordinates[2]:
@@ -69,6 +72,7 @@ class Flat(object):
         return node.east
 
     def insert_upper_x_axis(self, coordinates):
+        """Insert upper x axis"""
         node = self.origin
         i = 0
         while node.up != None and i < coordinates[2]:
@@ -87,6 +91,7 @@ class Flat(object):
         return node.east
 
     def insert_upper_y_axis(self, coordinates):
+        """Insert upper y axis"""
         node = self.origin
         i = 0
         while node.up != None and i < coordinates[2]:
@@ -105,6 +110,7 @@ class Flat(object):
         return node.north
 
     def insert_origin_z(self, coordinates):
+        """Insert origin on higher floors"""
         i = 0
         node = self.origin
         while node.up != None and i < coordinates[2]:
@@ -198,16 +204,14 @@ class Flat(object):
         node.gate = True
         node.gate_num = gate_num
 
-        # possibly add extra weight
-        for neighbor in node.find_neigbors():
-            neighbor.weight += 1
-
         return node
 
     def get_origin(self):
+        """Returns origin"""
         return self.origin
 
     def lowest_density(self):
+        """Returns the layer with lowest density"""
         densities = []
         node = self.get_origin()
         while node != None:
@@ -216,6 +220,7 @@ class Flat(object):
         return densities.index(min(densities))
 
     def layer_density(self, node):
+        """Find the layer density of a layer given a node"""
         start_node = node
         layer_num = node.coordinates[2]
         square_pt = self.dimensions[0] * self.dimensions[1]
@@ -236,8 +241,10 @@ class Flat(object):
             node = temp.north
         return layer_weight / square_pt
 
+
     def find_route(self, start_node, goal_node, route_num):
-        """Finds route and returns route in list using A*"""
+        """Finds route between given start and goal node if route becomes too
+        long or open and closed list become 0, not route is found."""
         open_list = []
         closed_list = []
         seen = []
@@ -246,22 +253,15 @@ class Flat(object):
         min_distance = start_node.man_distance(goal_node)
         closed_list.append(node)
 
-        # floor = self.lowest_density()
-        # sub_goal1 = self.find_node((start_node.coordinates[0], start_node.coordinates[1], floor))
-        # sub_goal2 = self.find_node((goal_node.coordinates[0], goal_node.coordinates[1], floor))
 
         while node != goal_node:
             if len(closed_list) > min_distance + 50:
                 return None
-            # if sub_goal1 not in closed_list:
-            #     temp_goal = sub_goal1
-            # if sub_goal1 in closed_list and sub_goal2 not in closed_list:
-            #     temp_goal = sub_goal2
+
             for adj_node in node.find_adjacent(goal_node):
 
                 adj_node.gcost = self.layer_density(adj_node)
-                # if adj_node.coordinates[2] == 0 or adj_node.coordinates[2] == 1:
-                #     adj_node.gcost += 1
+
                 adj_node.hcost = adj_node.man_distance(goal_node)
                 adj_node.fcost = adj_node.gcost + adj_node.hcost
 
@@ -283,7 +283,6 @@ class Flat(object):
                 del closed_list[-1]
                 continue
 
-            # take the last from the open list (assuming this is faster)
             node = open_list[-1]
             for x in open_list:
                 if x.fcost < node.fcost:
@@ -291,6 +290,7 @@ class Flat(object):
                     open_list.remove(x)
             closed_list.append(node)
             open_list = []
+
         for y in closed_list:
             y.route = route_num
 
@@ -303,7 +303,7 @@ class Flat(object):
             return None
         layer = 1
         while node != None:
-            grid_string += "## Layer {0} ##\n".format(layer)
+            grid_string += "### Layer {0} ###\n".format(layer)
             temp_floor = node
             # start from the top
             while node.north:
