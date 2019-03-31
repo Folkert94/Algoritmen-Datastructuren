@@ -167,22 +167,18 @@ class Flat(object):
         node = self.origin
         if node == None:
             return None
-
         z = 0
         while node.up and z < coordinates[2]:
             node = node.up
             z += 1
-
         y = 0
         while node.north and y < coordinates[1]:
             node = node.north
             y += 1
-
         x = 0
         while node.east and x < coordinates[0]:
             node = node.east
             x += 1
-
         if node.coordinates != coordinates:
             return None
         else:
@@ -198,6 +194,7 @@ class Flat(object):
                     return node
                 node = node.east
             node = temp.north
+        return node
 
     def is_gate(self, coordinates, gate_num):
         """Sets node to given gate number given coordinates of the node
@@ -205,10 +202,6 @@ class Flat(object):
         node = self.find_node(coordinates)
         node.gate = True
         node.gate_num = gate_num
-
-        for neighbor in node.find_neigbors():
-            neighbor.weight += 1
-
         return node
 
     def get_origin(self):
@@ -269,7 +262,7 @@ class Flat(object):
 
             for adj_node in node.find_adjacent(goal_node):
 
-                adj_node.gcost = 1 + self.layer_density(adj_node)
+                adj_node.gcost = 1 + 2 * self.layer_density(adj_node)
 
                 adj_node.hcost = adj_node.man_distance(goal_node)
                 adj_node.fcost = adj_node.gcost + adj_node.hcost
@@ -369,7 +362,7 @@ class Flat(object):
 
     def find_rand_sub_goal(self, start_node, goal_node, route_num):
         """Finds route between given start and goal node if route becomes too
-        long or open and closed list become 0, not route is found."""
+        long or open and closed list become 0, no route is found."""
         open_list = []
         closed_list = []
         seen = []

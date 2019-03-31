@@ -21,7 +21,7 @@ def random_insert(lst, item):
     lst.insert(randrange(len(lst) + 1), item)
 
 #change board to 1 or 2
-csv = open('circuit_board_2.csv', "r").read()
+csv = open('circuit_board_1.csv', "r").read()
 
 rows = csv.split("\n")
 
@@ -30,7 +30,7 @@ j = 0
 for row in rows:
     # board 1 : 1{31 - 62} // 2{64 - 105} // 3{107 - 158}
     # board 2 : 1{56 - 107} // 2{109 - 170} // 3{172 - 243}
-    if j > 172 and j < 243:
+    if j > 31 and j < 62:
         columns = row.split(",")
         routes.append(columns)
     j += 1
@@ -42,7 +42,7 @@ random.shuffle(routes)
 run_time = 0
 lowest_fail = 1
 failed_route_list = []
-while run_time < 500:
+while run_time < 100:
 
     for x in failed_route_list:
         temp = routes[int(x) - 1]
@@ -52,14 +52,14 @@ while run_time < 500:
     route_number = 1
 
     # adjust for 18x13 or 18x17 board
-    l1 = Flat((18, 17, 7))
+    l1 = Flat((18, 13, 7))
     gates = []
 
     rows = csv.split("\n")
     i = 0
     for row in rows:
         # board1 gates: 3 - 29 // board2 gates: 3 - 54
-        if i > 3 and i < 54:
+        if i > 3 and i < 29:
             columns = row.split(",")
             gates.append(np.array(columns))
         i += 1
@@ -84,9 +84,9 @@ while run_time < 500:
         route_number += 1
 
     # set divisor to number of routes
-    average_fail = failed_routes / 60
+    average_fail = failed_routes / 30
 
-    if run_time == 499:
+    if run_time == 99:
         print('retry on lesser route')
         del all_routes[-1]
         if len(all_routes) == 0:
@@ -98,7 +98,8 @@ while run_time < 500:
             failed_route_list = all_routes[-1][0]
             routes = all_routes[-1][1]
             run_time = 0
-            print(failed_route_list)
+            lowest_fail = all_routes[-1][2]
+            print(failed_route_list, lowest_fail)
             print(routes)
 
     if average_fail == 0.0:
@@ -110,7 +111,7 @@ while run_time < 500:
         print('improved route', average_fail, failed_route_list1, run_time)
         failed_route_list = failed_route_list1
         print(routes)
-        all_routes.append([failed_route_list1, routes])
+        all_routes.append([failed_route_list1, routes, average_fail])
         f = open('output.txt','w')
         print(l1, file=f)
         lowest_fail = average_fail

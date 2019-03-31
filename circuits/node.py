@@ -9,7 +9,6 @@ class Node(object):
     def __init__(self, coordinates, gate=False):
         """Initializing node. Usage Node((4, 2, 1), True)"""
         self.coordinates = coordinates
-        self.weight = 0
         self.route = 'No Route'
         self.gate = gate
         self.gate_num = 0

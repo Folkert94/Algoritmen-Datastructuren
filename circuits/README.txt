@@ -18,8 +18,10 @@ In extract_solutions.py wordt herhaaldelijk een circuitboard met 7 lagen
 aangemaakt, de gates geinitieerd en de paths gezocht. De paths worden eerst
 met een A* algoritme gezocht, dan met een A* met subgoals op de hoogste
 'dunbevolkste' laag (met de minste paths op de laag) en ten slotte wordt nog
-geprobeerd om deze subgoals enigszins te randomiseren op de hoogste
-'dunbevolkste' laag.
+geprobeerd om deze subgoals enigszins te 'randomise-en' op de hoogste
+'dunbevolkste' laag. Dit kan worden gerunt door 'python3 extract_solutions.py'
+te runnen. Bij de comments in het bestand zie je wat je moet aanpassen om welk
+circuitboard met welke netlist te krijgen.
 
 In find_route in Flat.py vind je het algoritme dat gebruik probeert te maken
 van het aantal routes in een bepaalde laag bij het kiezen van de volgende node.
