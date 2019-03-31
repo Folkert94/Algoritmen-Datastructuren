@@ -9,6 +9,7 @@ class Node(object):
     def __init__(self, coordinates, gate=False):
         """Initializing node. Usage Node((4, 2, 1), True)"""
         self.coordinates = coordinates
+        self.weight = 0
         self.route = 'No Route'
         self.gate = gate
         self.gate_num = 0
@@ -46,6 +47,22 @@ class Node(object):
         if self.down and self.down.gate == False or self.down is goal_node:
             adj_list.append(self.down)
         return adj_list
+
+    def find_neigbors(self):
+        neighbors = []
+        if self.north:
+            neighbors.append(self.north)
+        if self.south:
+            neighbors.append(self.south)
+        if self.west:
+            neighbors.append(self.west)
+        if self.east:
+            neighbors.append(self.east)
+        if self.up:
+            neighbors.append(self.up)
+        if self.down:
+            neighbors.append(self.down)
+        return neighbors
 
     def __str__(self):
         if self.gate is False:

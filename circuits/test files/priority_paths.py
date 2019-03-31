@@ -1,3 +1,10 @@
+"""
+Folkert Stijnman 10475206
+
+Programma om eerst de meest belaste gates te zoeken binnen de gegeven routes
+om vervolgens de routes te zoeken op die prioriteit
+"""
+
 from node import Node
 from flat import Flat
 import numpy as np
@@ -7,13 +14,8 @@ import csv
 
 csv = open('circuit_board_1.csv', "r").read()
 
-
-
-# print(routes)
-
-
 run_time = 0
-while run_time < 1000:
+while run_time < 10:
     l1 = Flat((18, 13, 7))
     gates = []
 

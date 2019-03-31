@@ -4,6 +4,7 @@ Folkert Stijnman    10475206
 Flat class for layers of nodes in given dimensions
 
 """
+import random
 import numpy as np
 from node import Node
 
@@ -154,6 +155,7 @@ class Flat(object):
         if node == None:
             return None
         node.east = Node((coordinates))
+
         node.east.west = node
         node_south = self.find_node((coordinates[0], coordinates[1] - 1, 0))
         node.east.south = node_south
@@ -204,6 +206,9 @@ class Flat(object):
         node.gate = True
         node.gate_num = gate_num
 
+        for neighbor in node.find_neigbors():
+            neighbor.weight += 1
+
         return node
 
     def get_origin(self):
@@ -211,13 +216,19 @@ class Flat(object):
         return self.origin
 
     def lowest_density(self):
-        """Returns the layer with lowest density"""
+        """Returns the layer index with lowest density"""
         densities = []
         node = self.get_origin()
         while node != None:
             densities.append(self.layer_density(node))
             node = node.up
-        return densities.index(min(densities))
+        y = 1
+        index = 0
+        for x in densities:
+            if x < y:
+                x = y
+            index += 1
+        return index
 
     def layer_density(self, node):
         """Find the layer density of a layer given a node"""
@@ -236,11 +247,10 @@ class Flat(object):
                 if node.route != 'No Route':
                     layer_weight += 1
                 if node.gate is True:
-                    layer_weight += 1
+                    layer_weight += 5
                 node = node.east
             node = temp.north
         return layer_weight / square_pt
-
 
     def find_route(self, start_node, goal_node, route_num):
         """Finds route between given start and goal node if route becomes too
@@ -253,20 +263,144 @@ class Flat(object):
         min_distance = start_node.man_distance(goal_node)
         closed_list.append(node)
 
-
         while node != goal_node:
             if len(closed_list) > min_distance + 50:
                 return None
 
             for adj_node in node.find_adjacent(goal_node):
 
-                adj_node.gcost = self.layer_density(adj_node)
+                adj_node.gcost = 1 + self.layer_density(adj_node)
 
                 adj_node.hcost = adj_node.man_distance(goal_node)
                 adj_node.fcost = adj_node.gcost + adj_node.hcost
 
                 # if it can only go back
                 if adj_node.find_adjacent(goal_node) == [node]:
+                    pass
+
+                # if there is a route or gate skip it
+                if str(adj_node.route) != 'No Route' and adj_node.gate == False:
+                    pass
+                else:
+                    open_list.append(adj_node)
+            open_list = set(open_list) - set(closed_list) - set(seen)
+            open_list = list(open_list)
+            if len(open_list) == 0:
+                if len(closed_list) == 0:
+                    return None
+                seen.append(closed_list[-1])
+                del closed_list[-1]
+                continue
+
+            node = open_list[-1]
+            for x in open_list:
+                if x.fcost < node.fcost:
+                    node = x
+                    open_list.remove(x)
+            closed_list.append(node)
+            open_list = []
+
+        for y in closed_list:
+            y.route = route_num
+
+        return closed_list
+
+    def find_route_sub_goal(self, start_node, goal_node, route_num):
+        """Finds route between given start and goal node if route becomes too
+        long or open and closed list become 0, not route is found."""
+        open_list = []
+        closed_list = []
+        seen = []
+        node = start_node
+
+        min_distance = start_node.man_distance(goal_node)
+        closed_list.append(node)
+
+        floor = self.lowest_density()
+        sub_goal1 = self.find_node((start_node.coordinates[0], start_node.coordinates[1], floor - 1))
+        sub_goal2 = self.find_node((goal_node.coordinates[0], goal_node.coordinates[1], floor - 1))
+
+        while node != goal_node:
+            if len(closed_list) > min_distance + 50:
+                return None
+            if sub_goal1 not in closed_list:
+                temp_goal = sub_goal1
+            if sub_goal1 in closed_list and sub_goal2 not in closed_list:
+                temp_goal = sub_goal2
+            if sub_goal1 in closed_list and sub_goal2 in closed_list:
+                temp_goal = goal_node
+
+            for adj_node in node.find_adjacent(temp_goal):
+                adj_node.gcost = 1
+
+                adj_node.hcost = adj_node.man_distance(temp_goal)
+                adj_node.fcost = adj_node.gcost + adj_node.hcost
+
+                # if it can only go back
+                if adj_node.find_adjacent(temp_goal) == [node]:
+                    pass
+
+                # if there is a route or gate skip it
+                if str(adj_node.route) != 'No Route' and adj_node.gate == False:
+                    pass
+                else:
+                    open_list.append(adj_node)
+            open_list = set(open_list) - set(closed_list) - set(seen)
+            open_list = list(open_list)
+            if len(open_list) == 0:
+                if len(closed_list) == 0:
+                    return None
+                seen.append(closed_list[-1])
+                del closed_list[-1]
+                continue
+
+            node = open_list[-1]
+            for x in open_list:
+                if x.fcost < node.fcost:
+                    node = x
+                    open_list.remove(x)
+            closed_list.append(node)
+            open_list = []
+
+        for y in closed_list:
+            y.route = route_num
+
+        return closed_list
+
+    def find_rand_sub_goal(self, start_node, goal_node, route_num):
+        """Finds route between given start and goal node if route becomes too
+        long or open and closed list become 0, not route is found."""
+        open_list = []
+        closed_list = []
+        seen = []
+        node = start_node
+
+        min_distance = start_node.man_distance(goal_node)
+        closed_list.append(node)
+
+        floor = self.lowest_density()
+        sub_goal1 = self.find_node((random.randint(start_node.coordinates[0], self.dimensions[0]-1), random.randint(start_node.coordinates[1], self.dimensions[1]-1), floor - 1))
+        sub_goal2 = self.find_node((random.randint(goal_node.coordinates[0], self.dimensions[0]-1), random.randint(goal_node.coordinates[1], self.dimensions[1]-1), floor - 1))
+
+        while node != goal_node:
+            if len(closed_list) > min_distance + 50:
+                return None
+            if sub_goal1 not in closed_list:
+                temp_goal = sub_goal1
+            if sub_goal1 in closed_list and sub_goal2 not in closed_list:
+                temp_goal = sub_goal2
+            if sub_goal1 in closed_list and sub_goal2 in closed_list:
+                temp_goal = goal_node
+
+            for adj_node in node.find_adjacent(temp_goal):
+
+                adj_node.gcost = 1
+
+                adj_node.hcost = adj_node.man_distance(temp_goal)
+                adj_node.fcost = adj_node.gcost + adj_node.hcost
+
+                # if it can only go back
+                if adj_node.find_adjacent(temp_goal) == [node]:
                     pass
 
                 # if there is a route or gate skip it
