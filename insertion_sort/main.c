@@ -1,3 +1,10 @@
+/*
+*
+* Folkert Stijnman    10475206
+* Insertion sort into linked list implementation
+*
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,9 +58,9 @@ int main(int argc, char *argv[]) {
     }
     struct list* l = list_init();
 
+    const char s[2] = " \n";
     while (fgets(buf, BUF_SIZE, stdin)) {
 
-        const char s[2] = " \n";
         char *token;
         token = strtok(buf, s);
         while(token != NULL) {

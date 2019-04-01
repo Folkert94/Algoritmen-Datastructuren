@@ -1,24 +1,14 @@
+/*
+*
+* Folkert Stijnman    10475206
+* List implementation
+*
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 
 #include "list.h"
-
-/*
- * TODO: A lot of code missing here. You will need to add implementations for
- * all the functions described in list.h here.
- *
- * Start by adding the definitions for the list and node structs. You may
- * implement any of the Linked List versions discussed in the lecture, which
- * have some different trade-offs for the functions you will need to write.
- *
- * Note: The function prototypes in list.h assume the most basic Singly Linked
- * List. If you build some other version, you may not need all of the function
- * arguments for all of the described functions. This will produce a warning,
- * which you can suppress by adding a simple if-statement to check the value
- * of the unused parameter.
- *
- * Also, do not forget to add any required includes at the top of your file.
- */
 
 struct list {
     struct node *head;
@@ -89,7 +79,8 @@ struct node* list_prev(struct list* l, struct node* n) {
     if (current == n) {
         return NULL;
     }
-    while (1) {
+
+    while (current != NULL) {
         if (current->next == n) {
             return current;
         }
@@ -107,13 +98,10 @@ int list_add_back(struct list* l, struct node* n) {
         return 0;
     }
     struct node *current = l->head;
-    while (1) {
-        if (current->next == NULL) {
-            current->next = n;
-            break;
-        }
+    while (current->next != NULL) {
         current = current->next;
-    }
+        }
+    current->next = n;
     return 0;
 }
 
@@ -144,6 +132,7 @@ int list_unlink_node(struct list* l, struct node* n) {
         temp = temp->next;
     }
     prev->next = n->next;
+    temp->next = NULL;
     return 0;
     }
 
