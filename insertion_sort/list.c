@@ -132,10 +132,9 @@ int list_unlink_node(struct list* l, struct node* n) {
         temp = temp->next;
     }
     prev->next = n->next;
-    temp->next = NULL;
+    temp = NULL;
     return 0;
     }
-
 
 void list_free_node(struct node* n) {
     free(n);

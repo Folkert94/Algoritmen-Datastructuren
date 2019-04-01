@@ -21,7 +21,7 @@ def random_insert(lst, item):
     lst.insert(randrange(len(lst) + 1), item)
 
 #change board to 1 or 2
-csv = open('circuit_board_1.csv', "r").read()
+csv = open('circuit_board_2.csv', "r").read()
 
 rows = csv.split("\n")
 
@@ -30,7 +30,7 @@ j = 0
 for row in rows:
     # board 1 : 1{31 - 62} // 2{64 - 105} // 3{107 - 158}
     # board 2 : 1{56 - 107} // 2{109 - 170} // 3{172 - 243}
-    if j > 31 and j < 62:
+    if j > 56 and j < 107:
         columns = row.split(",")
         routes.append(columns)
     j += 1
@@ -44,7 +44,8 @@ lowest_fail = 1
 failed_route_list = []
 while run_time < 100:
 
-    for x in failed_route_list:
+    if len(failed_route_list) != 0:
+        x = failed_route_list[0]
         temp = routes[int(x) - 1]
         del routes[int(x) - 1]
         random_insert(routes, temp)
@@ -52,14 +53,14 @@ while run_time < 100:
     route_number = 1
 
     # adjust for 18x13 or 18x17 board
-    l1 = Flat((18, 13, 7))
+    l1 = Flat((18, 17, 7))
     gates = []
 
     rows = csv.split("\n")
     i = 0
     for row in rows:
         # board1 gates: 3 - 29 // board2 gates: 3 - 54
-        if i > 3 and i < 29:
+        if i > 3 and i < 54:
             columns = row.split(",")
             gates.append(np.array(columns))
         i += 1
@@ -76,15 +77,14 @@ while run_time < 100:
         gate1 = l1.find_gate(int(route[0]))
         gate2 = l1.find_gate(int(route[1]))
         if l1.find_route_sub_goal(gate1, gate2, route_num) is None:
-            if l1.find_rand_sub_goal(gate1, gate2, route_num) is None:
-                if l1.find_route(gate1, gate2, route_num) is None:
+            if l1.find_route(gate1, gate2, route_num) is None:
                     failed_route_list1.append(route_num)
 
                     failed_routes += 1
         route_number += 1
 
     # set divisor to number of routes
-    average_fail = failed_routes / 30
+    average_fail = failed_routes / 50
 
     if run_time == 99:
         print('retry on lesser route')
